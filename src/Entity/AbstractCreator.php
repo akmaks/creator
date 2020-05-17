@@ -1,6 +1,6 @@
 <?php
 
-namespace Akimmaksimov85\Entity;
+namespace Akimmaksimov85\CreatorBundle\Entity;
 
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
@@ -15,81 +15,90 @@ use Nette\PhpGenerator\PsrPrinter;
  */
 abstract class AbstractCreator
 {
-    /**
-     * Тип файла Class
-     */
     const FILE_TYPE_CLASS = 'Class';
-
-    /**
-     * Тип файла Interface
-     */
     const FILE_TYPE_INTERFACE = 'Interface';
-
-    /**
-     * Тип файла Trait
-     */
     const FILE_TYPE_TRAIT = 'Trait';
 
     /**
-     * Название доменной области
-     *
      * @var string
      */
-    protected $domain;
+    protected $folderPath;
 
     /**
-     * Сущность доменной области
-     *
-     * @var string
-     */
-    protected $entity;
-
-    /**
-     * Название файла
-     *
      * @var string
      */
     protected $fileName;
 
     /**
-     * Тип файла (Class, Interface, Trait)
-     *
      * @var string
      */
     protected $type;
 
     /**
-     * AbstractCreator constructor.
+     * @var array
+     */
+    protected $uses = [];
+
+    /**
+     * @var array
+     */
+    protected $implements = [];
+
+    /**
+     * @var array
+     */
+    protected $properties = [];
+
+    /**
+     * @var array
+     */
+    protected $methods = [];
+
+    /**
+     * AbstractCodeGenerator constructor.
      *
-     * @param string $domain Название доменной области
-     * @param string $entity Сущность доменной области
-     * @param string $fileName Название файла
-     * @param string $type Тип файла (Класс, интерфейс, трейт)
+     * @param string $folderPath
+     * @param string $fileName
+     * @param string $type
      */
     public function __construct(
-        string $domain,
-        string $entity,
+        string $folderPath,
         string $fileName,
         string $type = self::FILE_TYPE_CLASS
-    ) {
-        $this->domain = $domain;
-        $this->entity = $entity;
+    )
+    {
+        $this->folderPath = $folderPath;
         $this->fileName = $fileName;
         $this->type = ucfirst(mb_strtolower($type));
 
         if (in_array($this->type, $this->getFileTypes()) === false) {
             throw new \InvalidArgumentException(
-                'Недопустимый тип файла %s. Допустимые типы: %s',
-                $this->type,
-                implode(', ', $this->getFileTypes())
+                sprintf(
+                    'Недопустимый тип файла %s. Допустимые типы: %s',
+                    $this->type,
+                    implode(', ', $this->getFileTypes())
+                )
             );
         }
+
+        $this->init();
     }
 
     /**
      *
      */
-    public function make()
+    public function init(): void
+    {
+        $this->initMethods();
+        $this->initProperties();
+        $this->initImplements();
+        $this->initUses();
+    }
+
+    /**
+     *
+     */
+    public function run()
     {
         $namespace = $this->getPhpNamespace();
 
@@ -101,7 +110,7 @@ abstract class AbstractCreator
          * @var $class ClassType
          */
         $class = $namespace->{'add' . $this->type}($this->getFileName());
-        $class->addComment($this->type . ' ' . $this->getFileName());
+        $class->addComment($this->getClassComment());
 
         foreach ($this->getImplements() as $implement) {
             $class->addImplement($implement);
@@ -109,6 +118,7 @@ abstract class AbstractCreator
 
         if (empty($this->getExtend()) === false) {
             $class->addExtend($this->getExtend());
+            $class->addComment($this->getFileComment());
         }
 
         foreach ($this->getProperties() as $property => $attrs) {
@@ -118,7 +128,6 @@ abstract class AbstractCreator
         }
 
         foreach ($this->getMethods() as $method => $attrs) {
-
             /**
              * @var $method Method
              */
@@ -136,28 +145,48 @@ abstract class AbstractCreator
             }
         }
 
-        if (file_exists($this->getFilePath()) === false) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Не существует пути %s для создания файла. Проверьте конфиги',
-                    $this->getFilePath()
-                )
-            );
+        if (is_dir($this->getAbsolutePath()) === false) {
+            $this->makeDirectory($this->getAbsolutePath());
         }
 
         file_put_contents(
-            $this->getFilePath() . '/' . $this->getFileName() . '.php',
-            "<?php\n\n" . (new PsrPrinter)->printNamespace($namespace)
+            $this->getAbsolutePath() . '/' . $this->getFileName() . '.php',
+            $this->clearBackSlashes("<?php\n\n" . (new PsrPrinter)->printNamespace($namespace))
         );
     }
 
     /**
-     * Метод задает область видимости свойства/метода
-     *
-     * @param $object Property|Method object
-     * @param $visibility string
+     * @return string
      */
-    private final function setVisibility($object, string $visibility): void
+    protected function getClassComment(): string
+    {
+        return $this->type . ' ' . $this->getFileName();
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    protected function clearBackSlashes(string $file): string
+    {
+        $positions = [
+            ': \\' => ': ',
+            '(\\' => '(',
+            ', \\' => ', '
+        ];
+
+        foreach ($positions as $search => $replace) {
+            $file = str_replace($search, $replace, $file);
+        }
+
+        return $file;
+    }
+
+    /**
+     * @param $object
+     * @param $visibility
+     */
+    private final function setVisibility($object, $visibility)
     {
         if (empty($visibility) === true) {
             return;
@@ -178,91 +207,7 @@ abstract class AbstractCreator
     }
 
     /**
-     * Создание метода конструктора
-     *
-     * @param array $properties
-     *
-     * @return array
-     */
-    protected function makeConstructor(array $properties): array
-    {
-        $body = '';
-        $comment = sprintf("%s Constructor.\n\n", $this->getFileName());
-
-        foreach ($properties as $property => $type) {
-            $comment .= sprintf("@param %s \$%s %s %s\n", $type, $property,  $this->getFileName(), $property);
-            $body .= sprintf("\$this->%s = \$%s;\n", $property, $property);
-        }
-
-        return [
-            '__construct' => [
-                'comment' => $comment,
-                'visibility' => 'public',
-                'return' => '',
-                'parameters' => $properties,
-                'body' => $body,
-            ],
-        ];
-    }
-
-    /**
-     * Создание метода по получению свойста
-     *
-     * @param string $property
-     * @param string $type
-     *
-     * @return array
-     */
-    protected function makeGetPropertyMethod(string $property, string $type)
-    {
-        return [
-            sprintf("get%s", ucfirst($property)) => [
-                'comment' => sprintf(
-                    "Method returns %s of %s \n\n@return %s",
-                    $property,
-                    $this->getFileName(),
-                    $type
-                ),
-                'visibility' => 'public',
-                'return' => $type,
-                'body' => sprintf("return \$this->%s;", $property)
-            ]
-        ];
-    }
-
-    /**
-     * Создание метода по изменению свойста
-     *
-     * @param string $property
-     * @param string $type
-     *
-     * @return array
-     */
-    protected function makeChangePropertyMethod(string $property, string $type)
-    {
-        return [
-            sprintf("set%s", ucfirst($property)) => [
-                'comment' => sprintf(
-                    "Method sets %s of %s. \n\n@param %s \$%s",
-                    $property,
-                    $this->getFileName(),
-                    $type,
-                    $property
-                ),
-                'parameters' => [
-                    $property => $type
-                ],
-                'visibility' => 'public',
-                'return' => 'void',
-                'body' => sprintf("\$this->%s = \$%s;", $property, $property)
-            ]
-        ];
-    }
-
-    /**
-     * Метод возвращает сущность namespace
-     *
-     * @return PhpNamespace
+     * @inheritDoc
      */
     private final function getPhpNamespace(): PhpNamespace
     {
@@ -270,38 +215,22 @@ abstract class AbstractCreator
     }
 
     /**
-     * Метод возвращает название доменной области
-     *
-     * @return string
+     * @inheritDoc
      */
-    protected function getDomain(): string
+    protected function getFolderPath(): string
     {
-        return  ucfirst(mb_strtolower($this->domain));
+        return $this->folderPath;
     }
 
     /**
-     * Метод возвращает название сущности
-     *
-     * @return string
-     */
-    protected function getEntity(): string
-    {
-        return ucfirst(mb_strtolower($this->entity));
-    }
-
-    /**
-     * Метод возвращает название файла
-     *
-     * @return string
+     * @inheritDoc
      */
     protected function getFileName(): string
     {
-        return ucfirst(mb_strtolower($this->fileName));
+        return $this->fileName;
     }
 
     /**
-     * Метод возвращает список доступных типов файла
-     *
      * @return array
      */
     protected function getFileTypes(): array
@@ -314,38 +243,30 @@ abstract class AbstractCreator
     }
 
     /**
-     * Метод возвращает методы, которые нужно создать в файле
-     *
      * @return array
      */
     protected function getMethods(): array
     {
-        return [];
+        return $this->methods;
     }
 
     /**
-     * Метод возвращает свойста, которые нужно создать
-     *
      * @return array
      */
     protected function getProperties(): array
     {
-        return [];
+        return $this->properties;
     }
 
     /**
-     * Метод возвращает интерйесы, которые нужно имплементировать
-     *
      * @return array
      */
     protected function getImplements(): array
     {
-        return [];
+        return $this->implements;
     }
 
     /**
-     * Метод возвращает класс, который нужно наследовать
-     *
      * @return string
      */
     protected function getExtend(): string
@@ -354,26 +275,111 @@ abstract class AbstractCreator
     }
 
     /**
-     * Метод возвращает список namespace, которые нужно объявить
-     *
      * @return array
      */
     protected function getUses(): array
     {
-        return [];
+        return $this->uses;
     }
 
     /**
-     * Метод возвращает название namespace файла
-     *
      * @return string
      */
-    abstract protected function getNamespacePath(): string;
+    protected function getFileComment(): string
+    {
+        return '';
+    }
 
     /**
-     * Метод возвращает путь к файлу
-     *
      * @return string
      */
-    abstract protected function getFilePath(): string;
+    protected function getRootPath(): string
+    {
+        return exec('pwd') . '/src';
+    }
+
+    /**
+     * @param $path
+     * @param int $mode
+     * @param bool $recursive
+     * @return bool
+     */
+    protected function makeDirectory($path, $mode = 0755, $recursive = true)
+    {
+        return mkdir($path, $mode, $recursive);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getNamespacePath(): string
+    {
+        return str_replace(
+            '/',
+            '\\',
+            'App\\' . $this->getFolderPath()
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getAbsolutePath(): string
+    {
+        return sprintf(
+            '%s/%s',
+            $this->getRootPath(),
+            $this->getFolderPath()
+        );
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    protected function isPrimitiveType(string $type): bool
+    {
+        return in_array(
+            $type,
+            [
+                'int',
+                'integer',
+                'string',
+                'bool',
+                'boolean',
+                'float',
+                'array',
+                'callable'
+            ]
+        );
+    }
+
+    /**
+     *
+     */
+    protected function initProperties(): void
+    {
+    }
+
+    /**
+     *
+     */
+    protected function initMethods(): void
+    {
+    }
+
+    /**
+     *
+     */
+    protected function initUses(): void
+    {
+    }
+
+    /**
+     *
+     */
+    protected function initImplements(): void
+    {
+    }
 }

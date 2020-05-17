@@ -2,21 +2,21 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Command as EntityCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Interactor as EntityInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Command as DoctrineEntityRepositoryCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Interactor as DoctrineEntityRepositoryInteractor;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateEntityCommand extends AbstractGenerateCommand
+class GenerateDoctrineEntityRepositoryCommand extends AbstractGenerateCommand
 {
-    protected static $defaultName = 'generator:entity';
+    protected static $defaultName = 'generator:doctrineEntityRepository';
 
     protected function configure()
     {
         $this
-            ->setDescription('generator:entity --file Client/Client --properties id:string/name:string/url:string')
+            ->setDescription('generator:doctrineEntityRepository --file Client/Client --properties id:string/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),
@@ -35,12 +35,12 @@ class GenerateEntityCommand extends AbstractGenerateCommand
     {
         $this->parseData($input->getOptions()['file'], $input->getOptions()['properties']);
 
-        $command = new EntityCommand();
+        $command = new DoctrineEntityRepositoryCommand();
         $command->folder = $this->folderPath;
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
 
-        (new EntityInteractor())($command);
+        (new DoctrineEntityRepositoryInteractor())($command);
 
         return 0;
     }

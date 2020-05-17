@@ -2,21 +2,21 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Command as EntityCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Interactor as EntityInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityDTO\Command as EntityDTOCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityDTO\Interactor as EntityDTOInteractor;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateEntityCommand extends AbstractGenerateCommand
+class GenerateEntityDTOCommand extends AbstractGenerateCommand
 {
-    protected static $defaultName = 'generator:entity';
+    protected static $defaultName = 'generator:entityDTO';
 
     protected function configure()
     {
         $this
-            ->setDescription('generator:entity --file Client/Client --properties id:string/name:string/url:string')
+            ->setDescription('generator:entityDTO --file Client/Client --properties id:string/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),
@@ -35,12 +35,12 @@ class GenerateEntityCommand extends AbstractGenerateCommand
     {
         $this->parseData($input->getOptions()['file'], $input->getOptions()['properties']);
 
-        $command = new EntityCommand();
+        $command = new EntityDTOCommand();
         $command->folder = $this->folderPath;
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
 
-        (new EntityInteractor())($command);
+        (new EntityDTOInteractor())($command);
 
         return 0;
     }

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+rm -R `ls -1 -d src/*/`
+mkdir "src/Entities"
+touch src/Entities/.gitignore
+mkdir "src/Data"
+mkdir "src/Data/Exceptions"
+touch src/Data/Exceptions/.gitignore
+mkdir "src/Data/Gateways"
+mkdir "src/Data/Gateways/Doctrine"
+mkdir "src/Data/Gateways/Doctrine/Migrations"
+touch src/Data/Gateways/Doctrine/Migrations/.gitignore
+mkdir "src/Data/Gateways/API"
+touch src/Data/Gateways/API/.gitignore
+mkdir "src/Infrastructure"
+mkdir "src/Infrastructure/Services"
+touch src/Infrastructure/Services/.gitignore
+mkdir "src/UI"
+mkdir "src/UI/API"
+mkdir "src/UI/API/Controllers"
+touch src/UI/API/Controllers/.gitignore
+mkdir "src/UI/API/Requests"
+touch src/UI/API/Requests/.gitignore
+mkdir "src/UI/API/Transformers"
+touch src/UI/API/Transformers/.gitignore
+mkdir "src/UI/Console"
+mkdir "src/UI/Web"
+mkdir "src/UI/Web/Controllers"
+touch src/UI/Web/Controllers/.gitignore
+mkdir "src/UI/Web/Requests"
+touch src/UI/Web/Requests/.gitignore
+mkdir "src/UI/Web/Transformers"
+touch src/UI/Web/Transformers/.gitignore
+touch src/Entities/.gitignore
+mkdir "src/UseCases"
+mkdir "src/UseCases/Command"
+touch src/UseCases/Command/.gitignore
+mkdir "src/UseCases/Query"
+touch src/UseCases/Query/.gitignore

@@ -1,6 +1,6 @@
 <?php
 
-namespace Akimmaksimov85\Entity;
+namespace Akimmaksimov85\CreatorBundle\Entity;
 
 /**
  * Class EntityCreator
@@ -16,48 +16,43 @@ class EntityCreator extends AbstractCreator
     /**
      * EntityCreator constructor.
      *
-     * @param string $domain
+     * @param string $folderPath
      * @param string $fileName
      * @param array $properties
      */
-    public function __construct(string $domain, string $fileName, array $properties = [])
+    public function __construct(string $folderPath, string $fileName, array $properties = [])
     {
-        $this->properties = $properties;
+        $this->uses[] = 'App\\Entities\\AbstractDTO';
 
-        parent::__construct($domain, $fileName, $fileName);
+        foreach ($properties as $property => $type) {
+            if (ucfirst($property) === $property) {
+                $this->uses[] = sprintf('App\\Entities\\%s\\%s', $property, $property);
+            }
+
+            $this->properties[lcfirst($property)] = $type;
+        }
+
+        parent::__construct($folderPath, $fileName);
     }
 
     /**
-     * @return array
+     *
      */
-    protected function getImplements(): array
+    protected function initImplements(): void
     {
-        return [];
+        $this->implements[] = 'App\\Entities\\Entity';
     }
 
     /**
-     * @return array
+     * @return void
      */
-    protected function getUses(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getNamespacePath(): string
-    {
-        return sprintf('App\\Entities\\%s\\%s', $this->getDomain(), $this->getFileName());
-    }
-
-    /**
-     * @return array
-     */
-    protected function getMethods(): array
+    protected function initMethods(): void
     {
         $methods = [];
-        $methods = array_merge($methods, $this->makeConstructor($this->properties));
+        $methods = array_merge(
+            $methods,
+            $this->makeConstructor($this->properties)
+        );
 
         foreach ($this->properties as $property => $type) {
             $methods = array_merge($methods, $this->makeGetter($property, $type));
@@ -66,38 +61,205 @@ class EntityCreator extends AbstractCreator
                 continue;
             }
 
-            $methods = array_merge($methods, $this->makeSetter($property, $type));
+            $methods = array_merge($methods, $this->makeChanger($property, $type));
         }
 
-        return $methods;
+        $methods = array_merge(
+            $methods,
+            $this->makeToDTO($this->getFileName())
+        );
+
+        $this->methods = $methods;
     }
 
     /**
-     * @return array
+     * @return void
      */
-    protected function getProperties(): array
+    protected function initProperties(): void
     {
         $properties = [];
 
         foreach ($this->properties as $property => $type) {
             $properties[$property] = [
-                'comment' => sprintf("%s %s \n\n@var %s", $this->getFileName(), $property, $type),
+                'comment' => sprintf(
+                    "%s %s \n\n@var %s%s",
+                    $this->getFileName(),
+                    $property,
+                    $type,
+                    $this->getIfIdNullableComment($property)
+                ),
                 'visibility' => 'protected',
             ];
         }
 
-        return $properties;
+        $this->properties = $properties;
     }
 
     /**
+     * @param string $property
+     *
      * @return string
      */
-    protected function getFilePath(): string
+    protected function getIfIdNullableComment(string $property): string
     {
-        return sprintf(
-            '/var/www/panel/app/Entities/%s/%s',
-            $this->getDomain(),
-            $this->getEntity()
-        );
+        return $property === 'id' ? '|null' : '';
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return string
+     */
+    protected function getIfIdNullableProperty(string $property): string
+    {
+        return $property === 'id' ? '?' : '';
+    }
+
+    /**
+     * Method makes getter
+     *
+     * @param string $property
+     * @param string $type
+     *
+     * @return array
+     */
+    protected function makeGetter(string $property, string $type)
+    {
+        return [
+            sprintf("get%s", ucfirst($property)) => [
+                'comment' => sprintf(
+                    "Method returns %s of %s \n\n@return %s%s",
+                    $property,
+                    $this->getFileName(),
+                    $type,
+                    $this->getIfIdNullableComment($property)
+                ),
+                'visibility' => 'public',
+                'return' => sprintf(
+                    '%s%s',
+                    $this->getIfIdNullableProperty($property),
+                    $type
+                ),
+                'body' => sprintf("return \$this->%s;", $property)
+            ]
+        ];
+    }
+
+    /**
+     * Method makes setter
+     *
+     * @param string $property
+     * @param string $type
+     *
+     * @return array
+     */
+    protected function makeChanger(string $property, string $type)
+    {
+        return [
+            sprintf("change%s", ucfirst($property)) => [
+                'comment' => sprintf(
+                    "Method sets %s of %s. \n\n@param %s \$%s",
+                    $property,
+                    $this->getFileName(),
+                    $type,
+                    $property
+                ),
+                'parameters' => [
+                    $property => $type
+                ],
+                'visibility' => 'public',
+                'return' => 'void',
+                'body' => sprintf("\$this->%s = \$%s;", $property, $property)
+            ]
+        ];
+    }
+
+    /**
+     * Method makes constructor
+     *
+     * @param array $properties
+     *
+     * @return array
+     */
+    protected function makeConstructor(array $properties): array
+    {
+        $body = '';
+        $comment = sprintf("%s Constructor.\n\n", $this->getFileName());
+
+        foreach ($properties as $property => $type) {
+            $comment .= sprintf(
+                "@param %s%s \$%s %s %s\n",
+                $type,
+                $this->getIfIdNullableComment($property),
+                $property,
+                $this->getFileName(),
+                $property
+            );
+            $body .= sprintf("\$this->%s = \$%s;\n", $property, $property);
+            $properties[$property] = sprintf(
+                '%s%s',
+                $this->getIfIdNullableProperty($property),
+                $type
+            );
+        }
+
+        return [
+            '__construct' => [
+                'comment' => $comment,
+                'visibility' => 'public',
+                'return' => '',
+                'parameters' => $properties,
+                'body' => $body,
+            ],
+        ];
+    }
+
+    /**
+     * Make toDTO method
+     *
+     * @param string $entityName Entity name
+     *
+     * @return array
+     */
+    protected function makeToDTO(string $entityName)
+    {
+        return [
+            'toDTO' => [
+                'comment' => sprintf(
+                    "Make DTO from entity \n\n@return %s|AbstractDTO",
+                    $entityName . 'DTO'
+                ),
+                'parameters' => [],
+                'visibility' => 'public',
+                'return' => 'AbstractDTO',
+                'body' => implode(
+                    "",
+                    array_merge(
+                        [
+                            sprintf(
+                                "\$dto = new %sDTO();\n",
+                                ucfirst($entityName)
+                            )
+                        ],
+                        array_map(
+                            function (string $property) {
+                                return sprintf(
+                                    "\$dto->%s = \$this->get%s();\n",
+                                    lcfirst($property),
+                                    ucfirst($property)
+                                );
+                            },
+                            array_keys($this->properties)
+                        ),
+                        [
+                            "\n"
+                        ],
+                        [
+                            "return \$dto;"
+                        ]
+                    )
+                ),
+            ]
+        ];
     }
 }

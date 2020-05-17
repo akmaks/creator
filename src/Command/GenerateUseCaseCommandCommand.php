@@ -2,21 +2,27 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Command as EntityCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Interactor as EntityInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CommandCommand\Command as CommandCommandCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CommandCommand\Interactor as CommandCommandInteractor;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateEntityCommand extends AbstractGenerateCommand
+class GenerateUseCaseCommandCommand extends AbstractGenerateCommand
 {
-    protected static $defaultName = 'generator:entity';
+    /**
+     * @var string
+     */
+    protected static $defaultName = 'generator:useCaseCommand';
 
+    /**
+     *
+     */
     protected function configure()
     {
         $this
-            ->setDescription('generator:entity --file Client/Client --properties id:string/name:string/url:string')
+            ->setDescription('generator:useCaseCommand --file Client/Client --properties id:string/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),
@@ -35,12 +41,12 @@ class GenerateEntityCommand extends AbstractGenerateCommand
     {
         $this->parseData($input->getOptions()['file'], $input->getOptions()['properties']);
 
-        $command = new EntityCommand();
+        $command = new CommandCommandCommand();
         $command->folder = $this->folderPath;
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
 
-        (new EntityInteractor())($command);
+        (new CommandCommandInteractor())($command);
 
         return 0;
     }

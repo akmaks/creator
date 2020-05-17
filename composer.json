@@ -1,26 +1,12 @@
 {
+    "name": "akimmaksimov85/creator",
+    "description": "Clean Architecture Code Creator",
     "type": "symfony-bundle",
-    "license": "proprietary",
-    "name": "Akimmaksimov85/creator",
-    "description": "Creator bundle",
+    "license": "MIT",
     "require": {
-        "php": "^7.2.5",
-        "ext-ctype": "*",
-        "ext-iconv": "*",
+        "nette/php-generator": "^3.3",
         "symfony/console": "5.0.*",
-        "symfony/dotenv": "5.0.*",
-        "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.0.*",
-        "symfony/yaml": "5.0.*",
-        "nette/php-generator": "*"
-    },
-    "require-dev": {
-    },
-    "config": {
-        "preferred-install": {
-            "*": "dist"
-        },
-        "sort-packages": true
+        "symfony/framework-bundle": "^5.0"
     },
     "autoload": {
         "psr-4": {
@@ -32,22 +18,5 @@
             "Akimmaksimov85\\CreatorBundle\\Tests\\": "tests"
         }
     },
-    "replace": {
-        "paragonie/random_compat": "2.*",
-        "symfony/polyfill-ctype": "*",
-        "symfony/polyfill-iconv": "*",
-        "symfony/polyfill-php72": "*",
-        "symfony/polyfill-php71": "*",
-        "symfony/polyfill-php70": "*",
-        "symfony/polyfill-php56": "*"
-    },
-    "conflict": {
-        "symfony/symfony": "*"
-    },
-    "extra": {
-        "symfony": {
-            "allow-contrib": false,
-            "require": "5.0.*"
-        }
-    }
+    "minimum-stability": "dev"
 }

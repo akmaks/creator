@@ -1,0 +1,4 @@
+services:
+  Akimmaksimov85\Bundle\CreatorBundle\Command\:
+    resource: '../../Command/*'
+    tags: ['console.command']

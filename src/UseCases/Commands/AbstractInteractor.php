@@ -1,8 +1,6 @@
 <?php
 /**
  * Abstract interactor
- *
- * @author Artur Turchin <a.turchin@artox.com>
  */
 
 declare(strict_types=1);

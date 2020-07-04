@@ -1,8 +1,6 @@
 <?php
 /**
  * Domain exception: не найден бренд
- *
- * @author Irina Volosevich <i.volosevich@artox.com>
  */
 
 declare(strict_types=1);

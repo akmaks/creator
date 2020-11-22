@@ -213,14 +213,6 @@ abstract class AbstractCreator
     /**
      * @inheritDoc
      */
-    private final function getPhpNamespace(): PhpNamespace
-    {
-        return new PhpNamespace($this->getNamespacePath());
-    }
-
-    /**
-     * @inheritDoc
-     */
     private final function getFile(): PhpFile
     {
         return new PhpFile();

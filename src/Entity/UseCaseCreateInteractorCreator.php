@@ -71,7 +71,7 @@ class UseCaseCreateInteractorCreator extends UseCaseDefaultInteractorCreator
                                                 }
 
                                                 return sprintf(
-                                                    "    \$%s->set%s(\$command->%s);\n",
+                                                    "\$%s->set%s(\$command->%s);\n",
                                                     lcfirst($this->entityName),
                                                     ucfirst($property),
                                                     $property

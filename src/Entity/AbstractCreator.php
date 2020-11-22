@@ -155,7 +155,7 @@ abstract class AbstractCreator
 
         file_put_contents(
             $this->getAbsolutePath() . '/' . $this->getFileName() . '.php',
-            $this->clearBackSlashes("<?php\n\n" . (new PsrPrinter)->printNamespace($namespace))
+            $this->clearBackSlashes((new PsrPrinter)->printFile($file))
         );
     }
 

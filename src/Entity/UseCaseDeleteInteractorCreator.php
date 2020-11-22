@@ -20,6 +20,7 @@ class UseCaseDeleteInteractorCreator extends UseCaseDefaultInteractorCreator
                     [
                         "Command handler\n\n",
                         "@param Command \$command Command\n\n",
+                        "@return void\n\n",
                     ]
                 ),
                 'visibility' => 'public',

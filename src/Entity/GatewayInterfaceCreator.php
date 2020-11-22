@@ -96,7 +96,7 @@ class GatewayInterfaceCreator extends AbstractCreator
             ],
             'delete' => [
                 'comment' => sprintf(
-                    "Delete specific %s. \n\n@param %s $%s %s",
+                    "Delete specific %s. \n\n@param %s $%s %s \n\n@return void",
                     $this->getEntityName(),
                     'Entity',
                     'entity',

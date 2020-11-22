@@ -154,11 +154,12 @@ class EntityCreator extends AbstractCreator
         return [
             sprintf("set%s", ucfirst($property)) => [
                 'comment' => sprintf(
-                    "Method sets %s of %s. \n\n@param %s \$%s",
+                    "Method sets %s of %s. \n\n@param %s \$%s %s \n\n@return void",
                     $property,
                     $this->getFileName(),
                     $type,
-                    $property
+                    $property,
+                    ucfirst($property)
                 ),
                 'parameters' => [
                     $property => $type

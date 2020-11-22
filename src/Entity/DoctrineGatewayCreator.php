@@ -91,6 +91,6 @@ class DoctrineGatewayCreator extends AbstractCreator
      */
     protected function makeFileName(string $entity)
     {
-        return ucfirst(mb_strtolower($entity)) . self::FILE_NAME_POSTFIX_ENTITY_GATEWAY;
+        return $entity . self::FILE_NAME_POSTFIX_ENTITY_GATEWAY;
     }
 }

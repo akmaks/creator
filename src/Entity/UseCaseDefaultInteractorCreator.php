@@ -156,7 +156,7 @@ class UseCaseDefaultInteractorCreator extends AbstractCreator
                     "",
                     [
                         "Command handler\n\n",
-                        "@param Command \$command Command",
+                        "@param Command \$command Command\n\n",
                         "@return void\n\n",
                     ]
                 ),

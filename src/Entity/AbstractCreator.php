@@ -360,6 +360,21 @@ abstract class AbstractCreator
     }
 
     /**
+     * Transform camelCase to under_score
+     *
+     * @param string $str
+     * @return string
+     */
+    protected function transformCamelCaseToSnakeCase(string $str)
+    {
+        $str = implode('_', array_map(function ($namePart) {
+            return mb_strtolower($namePart);
+        }, preg_split('/(?=[A-Z])/', $str)));
+
+        return $str;
+    }
+
+    /**
      *
      */
     protected function initProperties(): void

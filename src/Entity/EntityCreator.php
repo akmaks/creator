@@ -23,6 +23,12 @@ class EntityCreator extends AbstractCreator
     public function __construct(string $folderPath, string $fileName, array $properties = [])
     {
         $this->uses[] = 'App\\Entities\\AbstractDTO';
+        $this->uses[] = 'Doctrine\\ORM\\Mapping as ORM';
+        $this->uses[] = sprintf(
+            'App\\Data\\Gateways\\Doctrine\\%s\\%sRepository',
+            $this->getFileName(),
+            $this->getFileName()
+        );
 
         foreach ($properties as $property => $type) {
             if (ucfirst($property) === $property) {
@@ -258,5 +264,18 @@ class EntityCreator extends AbstractCreator
                 ),
             ]
         ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getClassComment(): string
+    {
+        return sprintf(
+            "%s\n\n@ORM\Table(name=\"%s\")\n\n@ORM\Entity(repositoryClass=%sRepository::class)",
+            $this->type . ' ' . $this->getFileName(),
+            $this->transformCamelCaseToSnakeCase(lcfirst($this->getFileName())),
+            $this->getFileName()
+        );
     }
 }

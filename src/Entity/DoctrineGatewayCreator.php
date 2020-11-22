@@ -61,6 +61,14 @@ class DoctrineGatewayCreator extends AbstractCreator
     }
 
     /**
+     *
+     */
+    protected function initUses(): void
+    {
+        $this->uses[] = sprintf('App\\Entities\\%s\\%s', $this->entityName, $this->entityName);
+    }
+
+    /**
      * @param string $entity
      * @return array
      */

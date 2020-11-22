@@ -54,7 +54,7 @@ class UseCaseCreateInteractorCreator extends UseCaseDefaultInteractorCreator
                     array_merge(
                         [
                             sprintf(
-                                "\$%s = new %s()",
+                                "\$%s = new %s();\n",
                                 lcfirst($this->entityName),
                                 ucfirst($this->entityName)
                             )
@@ -71,8 +71,8 @@ class UseCaseCreateInteractorCreator extends UseCaseDefaultInteractorCreator
                                                 }
 
                                                 return sprintf(
-                                                    "    %s->set%s(\$command->%s);\n",
-                                                    ucfirst($this->entityName),
+                                                    "    \$%s->set%s(\$command->%s);\n",
+                                                    lcfirst($this->entityName),
                                                     ucfirst($property),
                                                     $property
                                                 );

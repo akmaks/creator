@@ -4,8 +4,8 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
 
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
+use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\Property;
 use Nette\PhpGenerator\PsrPrinter;
 
 /**
@@ -100,7 +100,11 @@ abstract class AbstractCreator
      */
     public function run()
     {
-        $namespace = $this->getPhpNamespace();
+        $file = $this->getFile();
+        $file->addComment($this->getFileName());
+        $file->setStrictTypes();
+
+        $namespace = $file->addNamespace($this->getNamespacePath());
 
         foreach ($this->getUses() as $use) {
             $namespace->addUse($use);
@@ -212,6 +216,14 @@ abstract class AbstractCreator
     private final function getPhpNamespace(): PhpNamespace
     {
         return new PhpNamespace($this->getNamespacePath());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    private final function getFile(): PhpFile
+    {
+        return new PhpFile();
     }
 
     /**

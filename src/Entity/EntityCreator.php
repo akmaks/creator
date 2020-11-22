@@ -49,10 +49,6 @@ class EntityCreator extends AbstractCreator
     protected function initMethods(): void
     {
         $methods = [];
-        $methods = array_merge(
-            $methods,
-            $this->makeConstructor($this->properties)
-        );
 
         foreach ($this->properties as $property => $type) {
             $methods = array_merge($methods, $this->makeGetter($property, $type));
@@ -61,7 +57,7 @@ class EntityCreator extends AbstractCreator
                 continue;
             }
 
-            $methods = array_merge($methods, $this->makeChanger($property, $type));
+            $methods = array_merge($methods, $this->makeSetter($property, $type));
         }
 
         $methods = array_merge(
@@ -88,7 +84,7 @@ class EntityCreator extends AbstractCreator
                     $type,
                     $this->getIfIdNullableComment($property)
                 ),
-                'visibility' => 'protected',
+                'visibility' => 'private',
             ];
         }
 
@@ -153,10 +149,10 @@ class EntityCreator extends AbstractCreator
      *
      * @return array
      */
-    protected function makeChanger(string $property, string $type)
+    protected function makeSetter(string $property, string $type)
     {
         return [
-            sprintf("change%s", ucfirst($property)) => [
+            sprintf("set%s", ucfirst($property)) => [
                 'comment' => sprintf(
                     "Method sets %s of %s. \n\n@param %s \$%s",
                     $property,

@@ -54,7 +54,7 @@ class UseCaseCreateInteractorCreator extends UseCaseDefaultInteractorCreator
                     array_merge(
                         [
                             sprintf(
-                                "\$%s = new %s(\n",
+                                "\$%s = new %s()",
                                 lcfirst($this->entityName),
                                 ucfirst($this->entityName)
                             )
@@ -63,18 +63,26 @@ class UseCaseCreateInteractorCreator extends UseCaseDefaultInteractorCreator
                             rtrim(
                                 implode(
                                     "",
-                                    array_map(
-                                        function (string $property) {
-                                            return sprintf("    \$command->%s,\n", $property);
-                                        },
-                                        array_keys($this->properties)
+                                    array_filter(
+                                        array_map(
+                                            function (string $property) {
+                                                if ($property === 'id') {
+                                                    return '';
+                                                }
+
+                                                return sprintf(
+                                                    "    %s->set%s(\$command->%s);\n",
+                                                    ucfirst($this->entityName),
+                                                    ucfirst($property),
+                                                    $property
+                                                );
+                                            },
+                                            array_keys($this->properties)
+                                        )
                                     )
                                 ),
                                 ",\n"
                             ) . "\n"
-                        ],
-                        [
-                            ");\n\n"
                         ],
                         [
                             sprintf(

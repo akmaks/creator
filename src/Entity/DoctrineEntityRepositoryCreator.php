@@ -8,8 +8,7 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
  */
 class DoctrineEntityRepositoryCreator extends AbstractCreator
 {
-    const FILE_NAME_POSTFIX_ENTITY = 'Entity';
-    const FILE_NAME_POSTFIX_ENTITY_REPOSITORY = 'EntityRepository';
+    const FILE_NAME_POSTFIX_ENTITY_REPOSITORY = 'Repository';
 
     /**
      * @var string
@@ -36,6 +35,14 @@ class DoctrineEntityRepositoryCreator extends AbstractCreator
     }
 
     /**
+     *
+     */
+    protected function initUses(): void
+    {
+        $this->uses[] = sprintf('App\\Entities\\%s\\%s', $this->entityName, $this->entityName);
+    }
+
+    /**
      * @return string
      */
     protected function getFileComment(): string
@@ -46,19 +53,19 @@ class DoctrineEntityRepositoryCreator extends AbstractCreator
                 "\n",
                 sprintf(
                     "@method %s|null find(\$id, \$lockMode = null, \$lockVersion = null)\n",
-                    $this->entityName . self::FILE_NAME_POSTFIX_ENTITY
+                    $this->entityName
                 ),
                 sprintf(
                     "@method %s[]    findAll()\n",
-                    $this->entityName . self::FILE_NAME_POSTFIX_ENTITY
+                    $this->entityName
                 ),
                 sprintf(
                     "@method %s[]    findBy(array \$criteria, array \$orderBy = null, \$limit = null, \$offset = null)\n",
-                    $this->entityName . self::FILE_NAME_POSTFIX_ENTITY
+                    $this->entityName
                 ),
                 sprintf(
                     "@method %s|null findOneBy(array \$criteria, array \$orderBy = null)\n",
-                    $this->entityName . self::FILE_NAME_POSTFIX_ENTITY
+                    $this->entityName
                 ),
             ]
         );
@@ -71,6 +78,6 @@ class DoctrineEntityRepositoryCreator extends AbstractCreator
      */
     protected function makeFileName(string $entity)
     {
-        return ucfirst(mb_strtolower($entity)) . self::FILE_NAME_POSTFIX_ENTITY_REPOSITORY;
+        return $entity . self::FILE_NAME_POSTFIX_ENTITY_REPOSITORY;
     }
 }

@@ -8,7 +8,6 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
  */
 class DoctrineGatewayCreator extends AbstractCreator
 {
-    const FILE_NAME_POSTFIX_ENTITY = 'Entity';
     const FILE_NAME_POSTFIX_ENTITY_GATEWAY = 'Gateway';
 
     /**
@@ -68,11 +67,11 @@ class DoctrineGatewayCreator extends AbstractCreator
     protected function makeGetDoctrineEntityName(string $entity): array
     {
         return [
-            'getDoctrineEntityName' => [
+            'getEntityName' => [
                 'comment' => "Method returns doctrine entity name \n\n@return string",
                 'visibility' => 'protected',
                 'return' => 'string',
-                'body' => sprintf("return %s::class;", $entity . self::FILE_NAME_POSTFIX_ENTITY)
+                'body' => sprintf("return %s::class;", $entity)
             ]
         ];
     }

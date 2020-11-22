@@ -22,8 +22,6 @@ use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityNotFoundByIdExc
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityNotFoundByIdException\Interactor as EntityNotFoundByIdExceptionInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\GatewayInterface\Command as GatewayInterfaceCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\GatewayInterface\Interactor as GatewayInterfaceInteractor;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntity\Command as DoctrineEntityCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntity\Interactor as DoctrineEntityInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Command as DoctrineEntityRepositoryCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Interactor as DoctrineEntityRepositoryInteractor;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -79,12 +77,6 @@ class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
         (new EntityNotFoundByIdExceptionInteractor())($command);
-
-        $command = new DoctrineEntityCommand();
-        $command->folder = 'Data/Gateways/Doctrine/' . $this->fileName;
-        $command->fileName = $this->fileName;
-        $command->properties = $this->properties;
-        (new DoctrineEntityInteractor())($command);
 
         $command = new DoctrineEntityRepositoryCommand();
         $command->folder = 'Data/Gateways/Doctrine/' . $this->fileName;

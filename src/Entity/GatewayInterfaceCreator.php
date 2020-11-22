@@ -9,6 +9,8 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
  */
 class GatewayInterfaceCreator extends AbstractCreator
 {
+    const FILE_NAME_POSTFIX_GATEWAY_INTERFACE = 'GatewayInterface';
+
     /**
      * @var
      */
@@ -55,7 +57,7 @@ class GatewayInterfaceCreator extends AbstractCreator
      */
     protected function makeFileName(string $entity)
     {
-        return ucfirst(mb_strtolower($entity)) . 'GatewayInterface';
+        return $entity . self::FILE_NAME_POSTFIX_GATEWAY_INTERFACE;
     }
 
     /**

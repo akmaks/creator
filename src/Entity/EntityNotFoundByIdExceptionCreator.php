@@ -36,7 +36,7 @@ class EntityNotFoundByIdExceptionCreator extends AbstractCreator
      */
     protected function makeFileName(string $entity)
     {
-        return ucfirst(mb_strtolower($entity)) . self::FILE_NAME_POSTFIX_NOT_FOUND_BY_ID_EXCEPTION;
+        return $entity . self::FILE_NAME_POSTFIX_NOT_FOUND_BY_ID_EXCEPTION;
     }
 
     /**

@@ -157,6 +157,7 @@ class UseCaseDefaultInteractorCreator extends AbstractCreator
                     [
                         "Command handler\n\n",
                         "@param Command \$command Command",
+                        "@return void\n\n",
                     ]
                 ),
                 'visibility' => 'public',

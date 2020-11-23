@@ -36,7 +36,7 @@ class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
     protected function configure()
     {
         $this
-            ->setDescription('generator:entityInfrastructure --file Client --properties id:string/name:string/url:string')
+            ->setDescription('generator:entityInfrastructure --file Client --properties id:int/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),

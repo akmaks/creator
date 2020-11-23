@@ -272,7 +272,14 @@ class EntityCreator extends AbstractCreator
     protected function getClassComment(): string
     {
         return sprintf(
-            "%s\n\n@ORM\Table(name=\"%ss\")\n@ORM\Entity(repositoryClass=%sRepository::class)",
+            implode(
+                "\n",
+            [
+                "%s\n\n@ORM\Table(name=\"%ss\")",
+                "@ORM\Entity(repositoryClass=%sRepository::class)",
+                "@ORM\HasLifecycleCallbacks",
+            ]
+            ),
             $this->type . ' ' . $this->getFileName(),
             $this->transformCamelCaseToSnakeCase(lcfirst($this->getFileName())),
             $this->getFileName()

@@ -42,6 +42,11 @@ abstract class AbstractCreator
     /**
      * @var array
      */
+    protected $traits = [];
+
+    /**
+     * @var array
+     */
     protected $implements = [];
 
     /**
@@ -93,6 +98,7 @@ abstract class AbstractCreator
         $this->initProperties();
         $this->initImplements();
         $this->initUses();
+        $this->initTraits();
     }
 
     /**
@@ -123,6 +129,10 @@ abstract class AbstractCreator
         if (empty($this->getExtend()) === false) {
             $class->addExtend($this->getExtend());
             $class->addComment($this->getFileComment());
+        }
+
+        foreach ($this->getTraits() as $trait) {
+            $class->addTrait($trait);
         }
 
         foreach ($this->getProperties() as $property => $attrs) {
@@ -271,6 +281,14 @@ abstract class AbstractCreator
     }
 
     /**
+     * @return array
+     */
+    protected function getTraits(): array
+    {
+        return $this->traits;
+    }
+
+    /**
      * @return string
      */
     protected function getExtend(): string
@@ -392,6 +410,13 @@ abstract class AbstractCreator
      *
      */
     protected function initUses(): void
+    {
+    }
+
+    /**
+     *
+     */
+    protected function initTraits(): void
     {
     }
 

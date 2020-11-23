@@ -50,6 +50,14 @@ class EntityCreator extends AbstractCreator
     }
 
     /**
+     *
+     */
+    protected function initTraits(): void
+    {
+        $this->traits[] = 'App\\Entities\\Traits\\CreatedUpdatedFieldsTrait';
+    }
+
+    /**
      * @return void
      */
     protected function initMethods(): void

@@ -22,15 +22,13 @@ class CreateRequestCreator extends AbstractCreator
             $this->properties[lcfirst($property)] = $type;
         }
 
-        parent::__construct($folderPath, $fileName);
+        parent::__construct($folderPath, $this->makeFileName());
     }
 
     /**
-     * @param string $entity
-     *
      * @return string
      */
-    protected function makeFileName(string $entity)
+    protected function makeFileName()
     {
         return 'CreateRequest';
     }

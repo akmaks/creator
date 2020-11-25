@@ -16,7 +16,7 @@ class GenerateCreateRequestCommand extends AbstractGenerateCommand
     protected function configure()
     {
         $this
-            ->setDescription('generator:entity --file Client/Client --properties id:int/name:string/url:string')
+            ->setDescription('generator:createRequest --file Client/Client --properties id:int/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),

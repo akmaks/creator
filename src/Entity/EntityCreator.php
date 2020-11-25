@@ -130,6 +130,8 @@ class EntityCreator extends AbstractCreator
                         "@ORM\GeneratedValue(strategy=\"AUTO\")\n\n"
                     ]
                 );
+            case ('type'):
+                return "@ORM\Column(type=\"integer\")\n\n";
             case ('name'):
             case ('url'):
             case ('title'):

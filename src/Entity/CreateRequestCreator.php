@@ -63,15 +63,39 @@ class CreateRequestCreator extends AbstractCreator
                 ),
                 'visibility' => 'public',
                 'return' => 'array',
-                'body' => $this->getRequestReturn(),
+                'body' => $this->getRequestReturn($this->params),
             ]
         ];
 
         parent::initMethods();
     }
 
-    protected function getRequestReturn()
+    protected function getRequestReturn(array $properties)
     {
-        return null;
+        $body = "return [";
+
+        foreach ($properties as $propery => $type) {
+            if ($propery === 'id') {
+                continue;
+            }
+
+            $body .= sprintf(
+                implode(
+                    "",
+                    [
+                        "\n    '%s' => [\n",
+                        "        new Assert\Type(\"%s\"),\n",
+                        "        new Assert\NotBlank(),\n",
+                        "    ],\n"
+                    ]
+                ),
+                $propery,
+                $type
+            );
+        }
+
+        $body .= "];";
+
+        return $body;
     }
 }

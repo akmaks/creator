@@ -8,24 +8,36 @@ use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteCommand\Interac
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateCommand\Command as CreateCommandCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateCommand\Command as UpdateCommandCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteCommand\Command as DeleteCommandCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateInteractor\Command as CreateInteractorCommand;
+
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateRequest\Interactor as CreateRequestInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateRequest\Interactor as UpdateRequestInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteRequest\Interactor as DeleteRequestInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateRequest\Command as CreateRequestCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateRequest\Command as UpdateRequestCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteRequest\Command as DeleteRequestCommand;
+
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateInteractor\Interactor as CreateInteractorInteractor;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateInteractor\Command as UpdateInteractorCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateInteractor\Interactor as UpdateInteractorInteractor;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteInteractor\Command as DeleteInteractorCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteInteractor\Interactor as DeleteInteractorInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateInteractor\Command as CreateInteractorCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateInteractor\Command as UpdateInteractorCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteInteractor\Command as DeleteInteractorCommand;
+
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineGateway\Command as DoctrineGatewayCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Command as DoctrineEntityRepositoryCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineGateway\Interactor as DoctrineGatewayInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Interactor as DoctrineEntityRepositoryInteractor;
+
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Command as EntityCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Interactor as EntityInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityDTO\Command as EntityDTOCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\GatewayInterface\Command as GatewayInterfaceCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\Entity\Interactor as EntityInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityDTO\Interactor as EntityDTOInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\GatewayInterface\Interactor as GatewayInterfaceInteractor;
+
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityNotFoundByIdException\Command as EntityNotFoundByIdExceptionCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\EntityNotFoundByIdException\Interactor as EntityNotFoundByIdExceptionInteractor;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\GatewayInterface\Command as GatewayInterfaceCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\GatewayInterface\Interactor as GatewayInterfaceInteractor;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Command as DoctrineEntityRepositoryCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Interactor as DoctrineEntityRepositoryInteractor;
+
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -127,6 +139,24 @@ class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
         (new DeleteInteractorInteractor())($command);
+
+        $command = new CreateRequestCommand();
+        $command->folder = 'UI/API/Requests/' . $this->fileName;
+        $command->fileName = $this->fileName;
+        $command->properties = $this->properties;
+        (new CreateRequestInteractor())($command);
+
+        $command = new UpdateRequestCommand();
+        $command->folder = 'UI/API/Requests/' . $this->fileName;
+        $command->fileName = $this->fileName;
+        $command->properties = $this->properties;
+        (new UpdateRequestInteractor())($command);
+
+        $command = new DeleteRequestCommand();
+        $command->folder = 'UI/API/Requests/' . $this->fileName;
+        $command->fileName = $this->fileName;
+        $command->properties = $this->properties;
+        (new DeleteRequestInteractor())($command);
 
         return 0;
     }

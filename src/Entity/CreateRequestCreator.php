@@ -9,6 +9,8 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
  */
 class CreateRequestCreator extends AbstractCreator
 {
+    protected $params;
+
     /**
      * CreateRequestCreator constructor.
      *
@@ -18,9 +20,7 @@ class CreateRequestCreator extends AbstractCreator
      */
     public function __construct(string $folderPath, string $fileName, array $properties = [])
     {
-        foreach ($properties as $property => $type) {
-            $this->properties[lcfirst($property)] = $type;
-        }
+        $this->params = $properties;
 
         parent::__construct($folderPath, $this->makeFileName());
     }

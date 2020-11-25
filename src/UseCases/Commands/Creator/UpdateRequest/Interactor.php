@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateRequest;
+namespace Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateRequest;
 
-use Akimmaksimov85\CreatorBundle\Entity\CreateRequestCreator;
+use Akimmaksimov85\CreatorBundle\Entity\UpdateRequestCreator;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\AbstractInteractor;
 
 class Interactor extends AbstractInteractor
@@ -18,7 +18,7 @@ class Interactor extends AbstractInteractor
      */
     public function __invoke(Command $command) : void
     {
-        $creator = new CreateRequestCreator($command->folder, $command->fileName, $command->properties);
+        $creator = new UpdateRequestCreator($command->folder, $command->fileName, $command->properties);
         $creator->run();
     }
 

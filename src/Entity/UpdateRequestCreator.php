@@ -4,10 +4,10 @@
 namespace Akimmaksimov85\CreatorBundle\Entity;
 
 /**
- * Class CreateRequestCreator
+ * Class UpdateRequestCreator
  * @package Akimmaksimov85\CreatorBundle\Entity
  */
-class CreateRequestCreator extends AbstractCreator
+class UpdateRequestCreator extends AbstractCreator
 {
     /**
      * @var array
@@ -28,8 +28,6 @@ class CreateRequestCreator extends AbstractCreator
      */
     public function __construct(string $folderPath, string $fileName, array $properties = [])
     {
-        unset($properties['id']);
-
         $this->entity = $fileName;
         $this->params = $properties;
 
@@ -41,7 +39,7 @@ class CreateRequestCreator extends AbstractCreator
      */
     protected function makeFileName()
     {
-        return 'CreateRequest';
+        return 'UpdateRequest';
     }
 
     /**
@@ -95,7 +93,7 @@ class CreateRequestCreator extends AbstractCreator
                             implode(
                                 "",
                                 [
-                                    "return (%s) \$this->params['%s'];"
+                                    "return (%s) \$this->params['%s'];",
                                 ]
                             ),
                             $type,

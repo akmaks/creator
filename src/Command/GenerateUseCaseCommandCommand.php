@@ -22,7 +22,7 @@ class GenerateUseCaseCommandCommand extends AbstractGenerateCommand
     protected function configure()
     {
         $this
-            ->setDescription('generator:useCaseCommand --file Client/Client --properties id:string/name:string/url:string')
+            ->setDescription('generator:useCaseCommand --file Client/Client --properties id:int/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),

@@ -16,7 +16,7 @@ class GenerateEntityNotFoundByIdExceptionCommand extends AbstractGenerateCommand
     protected function configure()
     {
         $this
-            ->setDescription('generator:entityNotFoundByIdException --file Data/Exceptions/Client --properties id:string')
+            ->setDescription('generator:entityNotFoundByIdException --file Data/Exceptions/Client --properties id:int')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),

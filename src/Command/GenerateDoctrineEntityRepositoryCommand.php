@@ -16,7 +16,7 @@ class GenerateDoctrineEntityRepositoryCommand extends AbstractGenerateCommand
     protected function configure()
     {
         $this
-            ->setDescription('generator:doctrineEntityRepository --file Client/Client --properties id:string/name:string/url:string')
+            ->setDescription('generator:doctrineEntityRepository --file Client/Client --properties id:int/name:string/url:string')
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('file', null, InputOption::VALUE_REQUIRED),

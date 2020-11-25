@@ -99,7 +99,7 @@ class CreateRequestCreator extends AbstractCreator
                                 ]
                             ),
                             $type,
-                            $property
+                            $this->transformCamelCaseToSnakeCase($property)
                         ),
                     ]
                 ]
@@ -128,7 +128,7 @@ class CreateRequestCreator extends AbstractCreator
                         "    ],\n"
                     ]
                 ),
-                $property
+                $this->transformCamelCaseToSnakeCase($property)
             );
         }
 

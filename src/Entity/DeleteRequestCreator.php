@@ -101,7 +101,7 @@ class DeleteRequestCreator extends AbstractCreator
                                 ]
                             ),
                             $type,
-                            $property
+                            $this->transformCamelCaseToSnakeCase($property)
                         ),
                     ]
                 ]
@@ -134,7 +134,7 @@ class DeleteRequestCreator extends AbstractCreator
                         "    ],\n"
                     ]
                 ),
-                $property
+                $this->transformCamelCaseToSnakeCase($property)
             );
         }
 

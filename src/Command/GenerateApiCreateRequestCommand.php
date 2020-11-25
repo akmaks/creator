@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateCreateRequestCommand extends AbstractGenerateCommand
+class GenerateApiCreateRequestCommand extends AbstractGenerateCommand
 {
     protected static $defaultName = 'generator:createRequest';
 
@@ -36,7 +36,7 @@ class GenerateCreateRequestCommand extends AbstractGenerateCommand
         $this->parseData($input->getOptions()['file'], $input->getOptions()['properties']);
 
         $command = new Command();
-        $command->folder = $this->folderPath;
+        $command->folder = 'UI/API/Requests/' . $this->fileName;
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
 

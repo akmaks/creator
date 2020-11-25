@@ -26,6 +26,16 @@ class CreateRequestCreator extends AbstractCreator
     }
 
     /**
+     * @param string $entity
+     *
+     * @return string
+     */
+    protected function makeFileName(string $entity)
+    {
+        return 'CreateRequest';
+    }
+
+    /**
      *
      */
     protected function initUses(): void
@@ -49,15 +59,13 @@ class CreateRequestCreator extends AbstractCreator
     protected function initMethods(): void
     {
         $this->methods = [
-            [
-                'getRules' => [
-                    'comment' => sprintf(
-                        "Validation rules \n\n@return array"
-                    ),
-                    'visibility' => 'public',
-                    'return' => 'array',
-                    'body' => $this->getRequestReturn(),
-                ]
+            'getRules' => [
+                'comment' => sprintf(
+                    "Validation rules \n\n@return array"
+                ),
+                'visibility' => 'public',
+                'return' => 'array',
+                'body' => $this->getRequestReturn(),
             ]
         ];
 
@@ -66,8 +74,6 @@ class CreateRequestCreator extends AbstractCreator
 
     protected function getRequestReturn()
     {
-        print_r(
-            $this->properties
-        );
+        return null;
     }
 }

@@ -9,7 +9,15 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
  */
 class CreateRequestCreator extends AbstractCreator
 {
+    /**
+     * @var array
+     */
     protected $params;
+
+    /**
+     * @var string
+     */
+    protected $entity;
 
     /**
      * CreateRequestCreator constructor.
@@ -20,6 +28,9 @@ class CreateRequestCreator extends AbstractCreator
      */
     public function __construct(string $folderPath, string $fileName, array $properties = [])
     {
+        unset($properties['id']);
+
+        $this->entity = $fileName;
         $this->params = $properties;
 
         parent::__construct($folderPath, $this->makeFileName());
@@ -63,22 +74,50 @@ class CreateRequestCreator extends AbstractCreator
                 ),
                 'visibility' => 'public',
                 'return' => 'array',
-                'body' => $this->getRequestReturn($this->params),
+                'body' => $this->getRulesReturn($this->params),
             ]
         ];
+
+        foreach ($this->params as $property => $type) {
+            $this->methods = array_merge(
+                $this->methods,
+                [
+                    $property => [
+                        'comment' => sprintf(
+                            "%s %s \n\n@return %s",
+                            $this->entity,
+                            $property,
+                            $type
+                        ),
+                        'visibility' => 'public',
+                        'return' => $type,
+                        'body' => sprintf(
+                            implode(
+                                "",
+                                [
+                                    "return (%s) \$this->params['%s'];"
+                                ]
+                            ),
+                            $type,
+                            $property
+                        ),
+                    ]
+                ]
+            );
+        }
 
         parent::initMethods();
     }
 
-    protected function getRequestReturn(array $properties)
+    /**
+     * @param array $properties
+     * @return string
+     */
+    protected function getRulesReturn(array $properties)
     {
         $body = "return [";
 
-        foreach ($properties as $propery => $type) {
-            if ($propery === 'id') {
-                continue;
-            }
-
+        foreach ($properties as $property => $type) {
             $body .= sprintf(
                 implode(
                     "",
@@ -89,7 +128,7 @@ class CreateRequestCreator extends AbstractCreator
                         "    ],\n"
                     ]
                 ),
-                $propery,
+                $property,
                 $type
             );
         }

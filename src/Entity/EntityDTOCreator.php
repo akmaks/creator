@@ -71,6 +71,7 @@ class EntityDTOCreator extends AbstractCreator
             $properties[lcfirst($property)] = [
                 'comment' => sprintf("%s %s \n\n@var %s", $this->entityName, $property, $type),
                 'visibility' => 'public',
+                'type' => $type,
             ];
         }
 

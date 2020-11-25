@@ -138,6 +138,7 @@ abstract class AbstractCreator
         foreach ($this->getProperties() as $property => $attrs) {
             $property = $class->addProperty($property);
             $property->addComment($attrs['comment'] ?? '');
+            $property->setType($attrs['type'] ?? '');
             $this->setVisibility($property, $attrs['visibility'] ?? '');
         }
 

@@ -71,6 +71,7 @@ class UseCaseUpdateCommandCreator extends AbstractCreator
                     ]
                 ),
                 'visibility' => 'public',
+                'type' => $type,
             ];
         }
 

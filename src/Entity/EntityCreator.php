@@ -106,6 +106,7 @@ class EntityCreator extends AbstractCreator
                     $this->getIfIdNullableComment($property)
                 ),
                 'visibility' => 'private',
+                'type' => $type,
             ];
         }
 

@@ -74,6 +74,7 @@ class UseCaseDeleteCommandCreator extends AbstractCreator
                     ]
                 ),
                 'visibility' => 'public',
+                'type' => $type,
             ];
         }
 

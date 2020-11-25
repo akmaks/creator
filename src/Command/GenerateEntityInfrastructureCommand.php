@@ -2,10 +2,12 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CommandCommand\Command as CommandCommandCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CommandCommand\Interactor as CommandCommandInteractor;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DefaultInteractor\Command as DefaultInteractorCommand;
-use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DefaultInteractor\Interactor as DefaultInteractorInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateCommand\Interactor as CreateCommandInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateCommand\Interactor as UpdateCommandInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteCommand\Interactor as DeleteCommandInteractor;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateCommand\Command as CreateCommandCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateCommand\Command as UpdateCommandCommand;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteCommand\Command as DeleteCommandCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateInteractor\Command as CreateInteractorCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateInteractor\Interactor as CreateInteractorInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateInteractor\Command as UpdateInteractorCommand;
@@ -90,23 +92,23 @@ class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
         $command->properties = $this->properties;
         (new DoctrineGatewayInteractor())($command);
 
-        $command = new CommandCommandCommand();
+        $command = new CreateCommandCommand();
         $command->folder = 'UseCases/Command/' . $this->fileName . '/Create';
         $command->fileName = 'Command';
         $command->properties = $this->properties;
-        (new CommandCommandInteractor())($command);
+        (new CreateCommandInteractor())($command);
 
-        $command = new CommandCommandCommand();
+        $command = new UpdateCommandCommand();
         $command->folder = 'UseCases/Command/' . $this->fileName . '/Update';
         $command->fileName = 'Command';
         $command->properties = $this->properties;
-        (new CommandCommandInteractor())($command);
+        (new UpdateCommandInteractor())($command);
 
-        $command = new CommandCommandCommand();
+        $command = new DeleteCommandCommand();
         $command->folder = 'UseCases/Command/' . $this->fileName . '/Delete';
         $command->fileName = 'Command';
         $command->properties = $this->properties;
-        (new CommandCommandInteractor())($command);
+        (new DeleteCommandInteractor())($command);
 
         $command = new CreateInteractorCommand();
         $command->folder = 'UseCases/Command/' . $this->fileName . '/Create';
@@ -125,21 +127,6 @@ class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
         (new DeleteInteractorInteractor())($command);
-
-        $command = new CommandCommandCommand();
-        $command->folder = 'UseCases/Query/' . $this->fileName . '/FindAll';
-        $command->fileName = 'Command';
-        $command->properties = [
-            'page' => 'int',
-            'limit' => 'int',
-        ];
-        (new CommandCommandInteractor())($command);
-
-        $command = new DefaultInteractorCommand();
-        $command->folder = 'UseCases/Query/' . $this->fileName . '/FindAll';
-        $command->fileName = $this->fileName;
-        $command->properties = $this->properties;
-        (new DefaultInteractorInteractor())($command);
 
         return 0;
     }

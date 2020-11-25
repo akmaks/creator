@@ -92,7 +92,14 @@ class EntityCreator extends AbstractCreator
         foreach ($this->properties as $property => $type) {
             $properties[$property] = [
                 'comment' => sprintf(
-                    "%s %s \n\n@var %s%s",
+                    implode(
+                        "",
+                        [
+                            "%s %s\n\n",
+                            $this->getDoctrineAnnotationByProperty($property),
+                            "@var %s%s"
+                        ]
+                    ),
                     $this->getFileName(),
                     $property,
                     $type,
@@ -103,6 +110,33 @@ class EntityCreator extends AbstractCreator
         }
 
         $this->properties = $properties;
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return string
+     */
+    protected function getDoctrineAnnotationByProperty(string $property): string
+    {
+        switch ($property) {
+            case ('id'):
+                return implode(
+                    "",
+                    [
+                        "@ORM\Column(type=\"integer\")\n",
+                        "@ORM\Id\n",
+                        "@ORM\GeneratedValue(strategy=\"AUTO\")\n\n"
+                    ]
+                );
+            case ('name'):
+            case ('url'):
+            case ('title'):
+            case ('password'):
+                return "@ORM\Column(type=\"string\", length=255)\n\n";
+            default:
+                return '';
+        }
     }
 
     /**

@@ -96,7 +96,7 @@ class EntityCreator extends AbstractCreator
                         "",
                         [
                             "%s %s\n\n",
-                            $this->getDoctrineAnnotationByProperty($property),
+                            $this->getDoctrineAnnotationByProperty($property, $type),
                             "@var %s%s"
                         ]
                     ),
@@ -115,28 +115,32 @@ class EntityCreator extends AbstractCreator
 
     /**
      * @param string $property
+     * @param string $type
      *
      * @return string
      */
-    protected function getDoctrineAnnotationByProperty(string $property): string
+    protected function getDoctrineAnnotationByProperty(string $property, string $type): string
     {
-        switch ($property) {
-            case ('id'):
-                return implode(
-                    "",
-                    [
-                        "@ORM\Column(type=\"integer\")\n",
-                        "@ORM\Id\n",
-                        "@ORM\GeneratedValue(strategy=\"AUTO\")\n\n"
-                    ]
-                );
-            case ('type'):
+        if ($property === 'id') {
+            return implode(
+                "",
+                [
+                    "@ORM\Column(type=\"integer\")\n",
+                    "@ORM\Id\n",
+                    "@ORM\GeneratedValue(strategy=\"AUTO\")\n\n"
+                ]
+            );
+        }
+
+        switch ($type) {
+            case ('int'):
                 return "@ORM\Column(type=\"integer\")\n\n";
-            case ('name'):
-            case ('url'):
-            case ('title'):
-            case ('password'):
+            case ('string'):
                 return "@ORM\Column(type=\"string\", length=255)\n\n";
+            case ('array'):
+                return "@ORM\Column(type=\"json\")\n\n";
+            case ('bool'):
+                return "@ORM\Column(type=\"boolean\")\n\n";
             default:
                 return '';
         }
@@ -319,11 +323,11 @@ class EntityCreator extends AbstractCreator
         return sprintf(
             implode(
                 "\n",
-            [
-                "%s\n\n@ORM\Table(name=\"%ss\")",
-                "@ORM\Entity(repositoryClass=%sRepository::class)",
-                "@ORM\HasLifecycleCallbacks",
-            ]
+                [
+                    "%s\n\n@ORM\Table(name=\"%ss\")",
+                    "@ORM\Entity(repositoryClass=%sRepository::class)",
+                    "@ORM\HasLifecycleCallbacks",
+                ]
             ),
             $this->type . ' ' . $this->getFileName(),
             $this->transformCamelCaseToSnakeCase(lcfirst($this->getFileName())),

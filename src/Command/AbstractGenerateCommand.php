@@ -44,7 +44,7 @@ abstract class AbstractGenerateCommand extends \Symfony\Component\Console\Comman
         }
 
         if (isset($propertiesData) === true) {
-            $propertiesData = explode('/', $propertiesData);
+            $propertiesData = array_filter(explode('/', $propertiesData));
             $this->properties = [];
 
             foreach ($propertiesData as $propertyData) {

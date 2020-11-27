@@ -35,8 +35,7 @@ abstract class AbstractGenerateCommand extends \Symfony\Component\Console\Comman
         }
 
         if (strpos($fileData, '/') !== false) {
-            $fileData = rtrim($fileData, '/');
-            $fileData = explode('/', $fileData);
+            $fileData = array_filter(explode('/', $fileData));
             $this->fileName = array_pop($fileData);
             $this->folderPath = implode('/', $fileData);
         } else {

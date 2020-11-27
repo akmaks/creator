@@ -324,7 +324,7 @@ class EntityCreator extends AbstractCreator
             implode(
                 "\n",
                 [
-                    "%s\n\n@ORM\Table(name=\"%ss\")",
+                    "%s\n\n@ORM\Table(name=\"%s\")",
                     "@ORM\Entity(repositoryClass=%sRepository::class)",
                     "@ORM\HasLifecycleCallbacks",
                 ]

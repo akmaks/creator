@@ -66,18 +66,6 @@ class GatewayInterfaceCreator extends AbstractCreator
     protected function initMethods(): void
     {
         $this->methods = [
-            'getAll' => [
-                'comment' => sprintf(
-                    "Get all %ss. \n\n@param int \$limit Limit\n@param int \$page Page \n\n@return array",
-                    lcfirst($this->getEntityName())
-                ),
-                'visibility' => 'public',
-                'parameters' => [
-                    'limit' => 'int',
-                    'page' => 'int',
-                ],
-                'return' => 'array',
-            ],
             'getById' => [
                 'comment' => sprintf(
                     "Get information about specific %s. \n\n@param %s $%s %s ID \n\n@return null|%s|%s",
@@ -141,12 +129,6 @@ class GatewayInterfaceCreator extends AbstractCreator
                     'entity' => 'Entity'
                 ],
                 'return' => 'Entity',
-            ],
-            'count' => [
-                'comment' => "Returns entities count \n\n@return int",
-                'visibility' => 'public',
-                'parameters' => [],
-                'return' => 'int',
             ],
         ];
     }

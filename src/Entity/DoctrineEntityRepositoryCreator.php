@@ -31,7 +31,7 @@ class DoctrineEntityRepositoryCreator extends AbstractCreator
 
     protected function getExtend(): string
     {
-        return 'Doctrine\\ORM\\EntityRepository';
+        return 'App\\Data\\Gateways\\Doctrine\\AbstractRepository';
     }
 
     /**

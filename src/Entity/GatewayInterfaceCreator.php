@@ -130,6 +130,23 @@ class GatewayInterfaceCreator extends AbstractCreator
                 ],
                 'return' => 'Entity',
             ],
+            'deleteAll' => [
+                'comment' => sprintf(
+                    implode(
+                        "",
+                        [
+                            "Delete all entities\n\n",
+                            "@param ArrayCollection \$entities Entities\n\n",
+                            "@return void"
+                        ]
+                    )
+                ),
+                'visibility' => 'public',
+                'parameters' => [
+                    'entities' => 'ArrayCollection'
+                ],
+                'return' => 'void',
+            ],
         ];
     }
 }

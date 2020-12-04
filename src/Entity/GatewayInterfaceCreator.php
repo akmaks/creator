@@ -40,6 +40,7 @@ class GatewayInterfaceCreator extends AbstractCreator
     protected function initUses(): void
     {
         $this->uses[] = 'App\\Entities\\Entity';
+        $this->uses[] = 'Doctrine\\Common\\Collections\\ArrayCollection';
     }
 
     /**

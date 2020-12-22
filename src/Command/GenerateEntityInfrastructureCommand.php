@@ -87,7 +87,7 @@ class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
         (new EntityDTOInteractor())($command);
 
         $command = new EntityNotFoundByIdExceptionCommand();
-        $command->folder = 'Data/Exceptions/' . $this->fileName;
+        $command->folder = 'Entities/Exceptions/' . $this->fileName;
         $command->fileName = $this->fileName;
         $command->properties = $this->properties;
         (new EntityNotFoundByIdExceptionInteractor())($command);

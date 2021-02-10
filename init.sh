@@ -12,6 +12,11 @@ mkdir "src/Data/Gateways/Doctrine/Migrations"
 touch src/Data/Gateways/Doctrine/Migrations/.gitignore
 mkdir "src/Data/Gateways/Doctrine/Mapping"
 touch src/Data/Gateways/Doctrine/Mapping/.gitignore
+mkdir "src/Data/Resources"
+touch src/Data/Resources/.gitignore
+mkdir "src/Data/EventListeners"
+mkdir "src/Data/EventListeners/Exceptions"
+touch src/Data/EventListeners/Exceptions/.gitignore
 mkdir "src/Data/Gateways/API"
 touch src/Data/Gateways/API/.gitignore
 mkdir "src/Infrastructure"

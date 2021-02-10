@@ -2,10 +2,9 @@
 
 rm -R `ls -1 -d src/*/`
 mkdir "src/Entities"
-touch src/Entities/.gitignore
-mkdir "src/Data"
 mkdir "src/Entities/Exceptions"
 touch src/Entities/Exceptions/.gitignore
+mkdir "src/Data"
 mkdir "src/Data/Gateways"
 mkdir "src/Data/Gateways/Doctrine"
 mkdir "src/Data/Gateways/Doctrine/Migrations"

@@ -14,7 +14,7 @@ class UseCaseUpdateInteractorCreator extends UseCaseDefaultInteractorCreator
     protected function initUses(): void
     {
         $this->uses[] = sprintf(
-            'App\\Data\\Exceptions\\%s\\%sNotFoundByIdException',
+            'App\\Entities\\Exceptions\\%s\\%sNotFoundByIdException',
             ucfirst($this->entityName),
             ucfirst($this->entityName)
         );

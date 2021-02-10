@@ -4,8 +4,8 @@
     "type": "symfony-bundle",
     "license": "MIT",
     "require": {
-        "nette/php-generator": "^3.3",
-        "symfony/console": "5.0.*",
+        "nette/php-generator": "^3.4",
+        "symfony/console": "^5.0",
         "symfony/framework-bundle": "^5.0"
     },
     "autoload": {

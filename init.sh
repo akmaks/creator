@@ -10,6 +10,8 @@ mkdir "src/Data/Gateways"
 mkdir "src/Data/Gateways/Doctrine"
 mkdir "src/Data/Gateways/Doctrine/Migrations"
 touch src/Data/Gateways/Doctrine/Migrations/.gitignore
+mkdir "src/Data/Gateways/Doctrine/Mapping"
+touch src/Data/Gateways/Doctrine/Mapping/.gitignore
 mkdir "src/Data/Gateways/API"
 touch src/Data/Gateways/API/.gitignore
 mkdir "src/Infrastructure"

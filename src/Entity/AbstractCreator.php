@@ -224,7 +224,7 @@ abstract class AbstractCreator
     /**
      * @inheritDoc
      */
-    private final function getFile(): PhpFile
+    protected final function getFile(): PhpFile
     {
         return new PhpFile();
     }

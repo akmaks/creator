@@ -25,6 +25,7 @@ class EntityCreator extends AbstractCreator
         foreach ($properties as $property => $type) {
             if (ucfirst($property) === $property) {
                 if ($type === 'string' && $property === 'id') {
+                    $this->uses[] = 'Ramsey\\Uuid\\Uuid';
                     $this->uses[] = 'Ramsey\\Uuid\\UuidInterface';
                     $this->properties['id'] = 'UuidInterface';
                     continue;
@@ -68,6 +69,9 @@ class EntityCreator extends AbstractCreator
             $methods = array_merge($methods, $this->makeGetter($property, $type));
 
             if ($property === 'id') {
+                if ($type === 'UuidInterface') {
+                    $this->makeConstructor();
+                }
                 continue;
             }
 
@@ -195,39 +199,16 @@ class EntityCreator extends AbstractCreator
     /**
      * Method makes constructor
      *
-     * @param array $properties
-     *
      * @return array
      */
-    protected function makeConstructor(array $properties): array
+    protected function makeConstructor(): array
     {
-        $body = '';
-        $comment = sprintf("%s Constructor.\n\n", $this->getFileName());
-
-        foreach ($properties as $property => $type) {
-            $comment .= sprintf(
-                "@param %s%s \$%s %s %s\n",
-                $type,
-                $this->getIfIdNullableComment($property),
-                $property,
-                $this->getFileName(),
-                $property
-            );
-            $body .= sprintf("\$this->%s = \$%s;\n", $property, $property);
-            $properties[$property] = sprintf(
-                '%s%s',
-                $this->getIfIdNullableProperty($property),
-                $type
-            );
-        }
-
         return [
             '__construct' => [
-                'comment' => $comment,
+                'comment' => sprintf("%s Constructor.\n\n", $this->getFileName()),
                 'visibility' => 'public',
                 'return' => '',
-                'parameters' => $properties,
-                'body' => $body,
+                'body' => "\$this->id = Uuid::uuid4();\n",
             ],
         ];
     }

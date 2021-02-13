@@ -6,7 +6,7 @@ namespace Akimmaksimov85\CreatorBundle\Entity;
  * Class EntityCreator
  * @package Akimmaksimov85\Entity
  */
-class EntityCreator extends AbstractCreator
+class EntityAnnotationCreator extends AbstractCreator
 {
     /**
      * @var array
@@ -24,13 +24,7 @@ class EntityCreator extends AbstractCreator
     {
         foreach ($properties as $property => $type) {
             if (ucfirst($property) === $property) {
-                if ($type === 'string' && $property === 'id') {
-                    $this->uses[] = 'Ramsey\\Uuid\\UuidInterface';
-                    $this->properties['id'] = 'UuidInterface';
-                    continue;
-                } else {
-                    $this->uses[] = sprintf('App\\Entities\\%s\\%s', $property, $property);
-                }
+                $this->uses[] = sprintf('App\\Entities\\%s\\%s', $property, $property);
             }
 
             $this->properties[lcfirst($property)] = $type;
@@ -39,6 +33,12 @@ class EntityCreator extends AbstractCreator
         parent::__construct($folderPath, $fileName);
 
         $this->uses[] = 'App\\Entities\\AbstractDTO';
+        $this->uses[] = 'Doctrine\\ORM\\Mapping as ORM';
+        $this->uses[] = sprintf(
+            'App\\Data\\Gateways\\Doctrine\\%s\\%sRepository',
+            $this->getFileName(),
+            $this->getFileName()
+        );
     }
 
     /**
@@ -96,6 +96,7 @@ class EntityCreator extends AbstractCreator
                         "",
                         [
                             "%s %s\n\n",
+                            $this->getDoctrineAnnotationByProperty($property, $type),
                             "@var %s%s"
                         ]
                     ),
@@ -110,6 +111,39 @@ class EntityCreator extends AbstractCreator
         }
 
         $this->properties = $properties;
+    }
+
+    /**
+     * @param string $property
+     * @param string $type
+     *
+     * @return string
+     */
+    protected function getDoctrineAnnotationByProperty(string $property, string $type): string
+    {
+        if ($property === 'id') {
+            return implode(
+                "",
+                [
+                    "@ORM\Column(type=\"integer\")\n",
+                    "@ORM\Id\n",
+                    "@ORM\GeneratedValue(strategy=\"AUTO\")\n\n"
+                ]
+            );
+        }
+
+        switch ($type) {
+            case ('int'):
+                return "@ORM\Column(type=\"integer\")\n\n";
+            case ('string'):
+                return "@ORM\Column(type=\"string\", length=255)\n\n";
+            case ('array'):
+                return "@ORM\Column(type=\"json\")\n\n";
+            case ('bool'):
+                return "@ORM\Column(type=\"boolean\")\n\n";
+            default:
+                return '';
+        }
     }
 
     /**
@@ -286,6 +320,18 @@ class EntityCreator extends AbstractCreator
      */
     protected function getClassComment(): string
     {
-        return $this->type . ' ' . $this->getFileName();
+        return sprintf(
+            implode(
+                "\n",
+                [
+                    "%s\n\n@ORM\Table(name=\"%s\")",
+                    "@ORM\Entity(repositoryClass=%sRepository::class)",
+                    "@ORM\HasLifecycleCallbacks",
+                ]
+            ),
+            $this->type . ' ' . $this->getFileName(),
+            $this->transformCamelCaseToSnakeCase(lcfirst($this->getFileName())),
+            $this->getFileName()
+        );
     }
 }

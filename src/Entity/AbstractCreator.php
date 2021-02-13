@@ -201,7 +201,7 @@ abstract class AbstractCreator
      * @param $object
      * @param $visibility
      */
-    private final function setVisibility($object, $visibility)
+    private function setVisibility($object, $visibility)
     {
         if (empty($visibility) === true) {
             return;

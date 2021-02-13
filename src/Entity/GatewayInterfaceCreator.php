@@ -71,7 +71,7 @@ class GatewayInterfaceCreator extends AbstractCreator
                 'comment' => sprintf(
                     "Get information about specific %s. \n\n@param %s $%s %s ID \n\n@return null|%s|%s",
                     $this->getEntityName(),
-                    'int',
+                    'string',
                     'id',
                     $this->getEntityName(),
                     $this->getEntityName(),
@@ -79,7 +79,7 @@ class GatewayInterfaceCreator extends AbstractCreator
                 ),
                 'visibility' => 'public',
                 'parameters' => [
-                    'id' => 'int'
+                    'id' => 'string'
                 ],
                 'return' => '?Entity',
             ],

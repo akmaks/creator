@@ -9,7 +9,11 @@
         "symfony/framework-bundle": "^5.0",
         "symfony/messenger": "^5.0",
         "symfony/validator": "^5.0",
-        "ramsey/uuid-doctrine": "^1.6"
+        "ramsey/uuid-doctrine": "^1.6",
+        "doctrine/annotations": "^1.11",
+        "doctrine/doctrine-bundle": "^2.2",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "doctrine/orm": "^2.8"
     },
     "autoload": {
         "psr-4": {

@@ -23,15 +23,15 @@ class EntityCreator extends AbstractCreator
     public function __construct(string $folderPath, string $fileName, array $properties = [])
     {
         foreach ($properties as $property => $type) {
+            if ($type === 'string' && $property === 'id') {
+                $this->uses[] = 'Ramsey\\Uuid\\Uuid';
+                $this->uses[] = 'Ramsey\\Uuid\\UuidInterface';
+                $this->properties['id'] = 'UuidInterface';
+                continue;
+            }
+
             if (ucfirst($property) === $property) {
-                if ($type === 'string' && $property === 'id') {
-                    $this->uses[] = 'Ramsey\\Uuid\\Uuid';
-                    $this->uses[] = 'Ramsey\\Uuid\\UuidInterface';
-                    $this->properties['id'] = 'UuidInterface';
-                    continue;
-                } else {
-                    $this->uses[] = sprintf('App\\Entities\\%s\\%s', $property, $property);
-                }
+                $this->uses[] = sprintf('App\\Entities\\%s\\%s', $property, $property);
             }
 
             $this->properties[lcfirst($property)] = $type;
@@ -70,7 +70,7 @@ class EntityCreator extends AbstractCreator
 
             if ($property === 'id') {
                 if ($type === 'UuidInterface') {
-                    $this->makeConstructor();
+                    $methods = array_merge($methods, $this->makeConstructor());
                 }
                 continue;
             }
@@ -123,7 +123,7 @@ class EntityCreator extends AbstractCreator
      */
     protected function getIfIdNullableComment(string $property): string
     {
-        return $property === 'id' ? '|null' : '';
+        return '';
     }
 
     /**
@@ -133,7 +133,7 @@ class EntityCreator extends AbstractCreator
      */
     protected function getIfIdNullableProperty(string $property): string
     {
-        return $property === 'id' ? '?' : '';
+        return '';
     }
 
     /**
@@ -149,19 +149,18 @@ class EntityCreator extends AbstractCreator
         return [
             sprintf("get%s", ucfirst($property)) => [
                 'comment' => sprintf(
-                    "Method returns %s of %s \n\n@return %s%s",
+                    "Method returns %s of %s \n\n@return %s",
                     $property,
                     $this->getFileName(),
-                    $type,
-                    $this->getIfIdNullableComment($property)
+                    $type === 'UuidInterface' ? 'string' : $type
                 ),
                 'visibility' => 'public',
-                'return' => sprintf(
-                    '%s%s',
-                    $this->getIfIdNullableProperty($property),
-                    $type
-                ),
-                'body' => sprintf("return \$this->%s;", $property)
+                'return' => $type === 'UuidInterface' ? 'string' : $type,
+                'body' => sprintf(
+                    "return \$this->%s%s;",
+                    $property,
+                    $type === 'UuidInterface' ? '->toString()' : '',
+                )
             ]
         ];
     }

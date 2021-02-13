@@ -80,6 +80,7 @@ class UseCaseDefaultInteractorCreator extends AbstractCreator
                 ]
             ),
             'visibility' => 'protected',
+            'type' => $this->getGatewayInterfaceName(),
         ];
 
         $this->properties = $properties;

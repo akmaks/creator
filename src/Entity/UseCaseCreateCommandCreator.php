@@ -71,7 +71,7 @@ class UseCaseCreateCommandCreator extends AbstractCreator
                     ]
                 ),
                 'visibility' => 'public',
-                'type' => $type,
+                'type' =>  $property === 'id' ? '?' . $type : $type,
             ];
         }
 

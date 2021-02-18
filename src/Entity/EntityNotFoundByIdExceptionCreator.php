@@ -54,7 +54,7 @@ class EntityNotFoundByIdExceptionCreator extends AbstractCreator
     {
         $this->methods = array_merge(
             $this->methods,
-            $this->makeConstructor('id', $this->properties['id'] ?? 'int')
+            $this->makeConstructor('id', $this->properties['id'] ?? 'string')
         );
     }
 

@@ -47,7 +47,7 @@ class UpdateRequestCreator extends AbstractCreator
      */
     protected function initUses(): void
     {
-        $this->uses[] = "Symfony\\Component\\Validator\\Constraints as Assert";
+        $this->uses[] = "Symfony\\Component\\Validator\\Constraints";
 
         parent::initUses();
     }
@@ -121,8 +121,8 @@ class UpdateRequestCreator extends AbstractCreator
                     "",
                     [
                         "\n    '%s' => [\n",
-                        "        new Assert\Type(\"string\"),\n",
-                        "        new Assert\NotBlank(),\n",
+                        "        new Constraints\Type(\"string\"),\n",
+                        "        new Constraints\NotBlank(),\n",
                         "    ],\n"
                     ]
                 ),

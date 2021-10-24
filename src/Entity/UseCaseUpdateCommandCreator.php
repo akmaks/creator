@@ -66,8 +66,8 @@ class UseCaseUpdateCommandCreator extends AbstractCreator
                     [
                         sprintf("%s %s\n\n", ucfirst($this->entityName), $property),
                         sprintf("@var %s\n\n", $type),
-                        sprintf("@Assert\Type(\"%s\")\n", $type),
-                        "@Assert\NotBlank()"
+                        sprintf("@Constraints\Type(\"%s\")\n", $type),
+                        "@Constraints\NotBlank()"
                     ]
                 ),
                 'visibility' => 'public',

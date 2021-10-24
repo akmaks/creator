@@ -48,7 +48,7 @@ class UseCaseDeleteCommandCreator extends AbstractCreator
      */
     protected function initUses(): void
     {
-        $this->uses[] = 'Symfony\\Component\\Validator\\Constraints as Assert';
+        $this->uses[] = 'Symfony\\Component\\Validator\\Constraints';
     }
 
     /**
@@ -69,8 +69,8 @@ class UseCaseDeleteCommandCreator extends AbstractCreator
                     [
                         sprintf("%s %s\n\n", ucfirst($this->entityName), $property),
                         sprintf("@var %s\n\n", $type),
-                        sprintf("@Assert\Type(\"%s\")\n", $type),
-                        "@Assert\NotBlank()"
+                        sprintf("@Constraints\Type(\"%s\")\n", $type),
+                        "@Constraints\NotBlank()"
                     ]
                 ),
                 'visibility' => 'public',

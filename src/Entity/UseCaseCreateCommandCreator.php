@@ -48,7 +48,7 @@ class UseCaseCreateCommandCreator extends AbstractCreator
      */
     protected function initUses(): void
     {
-        $this->uses[] = 'Symfony\\Component\\Validator\\Constraints as Assert';
+        $this->uses[] = 'Symfony\\Component\\Validator\\Constraints';
     }
 
     /**
@@ -66,8 +66,8 @@ class UseCaseCreateCommandCreator extends AbstractCreator
                     [
                         sprintf("%s %s\n\n", ucfirst($this->entityName), $property),
                         sprintf("@var %s%s\n\n", $type, $property === 'id' ? "|null" : ""),
-                        sprintf("@Assert\Type(\"%s\")\n", $type),
-                        $property === 'id' ? "" : "@Assert\NotBlank()"
+                        sprintf("@Constraints\Type(\"%s\")\n", $type),
+                        $property === 'id' ? "" : "@Constraints\NotBlank()"
                     ]
                 ),
                 'visibility' => 'public',

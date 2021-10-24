@@ -48,7 +48,7 @@ class UseCaseUpdateCommandCreator extends AbstractCreator
      */
     protected function initUses(): void
     {
-        $this->uses[] = 'Symfony\\Component\\Validator\\Constraints as Assert';
+        $this->uses[] = 'Symfony\\Component\\Validator\\Constraints';
     }
 
     /**

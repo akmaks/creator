@@ -2,6 +2,7 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Command as DoctrineEntityRepositoryCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DoctrineEntityRepository\Interactor as DoctrineEntityRepositoryInteractor;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -9,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'generator:doctrineEntityRepository')]
 class GenerateDoctrineEntityRepositoryCommand extends AbstractGenerateCommand
 {
     protected static $defaultName = 'generator:doctrineEntityRepository';

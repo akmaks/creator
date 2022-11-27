@@ -2,6 +2,7 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateRequest\Command;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateRequest\Interactor;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -9,10 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'generator:createRequest')]
 class GenerateApiCreateRequestCommand extends AbstractGenerateCommand
 {
-    protected static $defaultName = 'generator:createRequest';
-
     protected function configure()
     {
         $this

@@ -2,6 +2,7 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CreateCommand\Interactor as CreateCommandInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\UpdateCommand\Interactor as UpdateCommandInteractor;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\DeleteCommand\Interactor as DeleteCommandInteractor;
@@ -43,6 +44,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'generator:entityInfrastructure')]
 class GenerateEntityInfrastructureCommand extends AbstractGenerateCommand
 {
     protected static $defaultName = 'generator:entityInfrastructure';

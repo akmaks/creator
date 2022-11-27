@@ -2,6 +2,7 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CommandCommand\Command as CommandCommandCommand;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Creator\CommandCommand\Interactor as CommandCommandInteractor;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -9,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'generator:useCaseCommand')]
 class GenerateUseCaseCommandCommand extends AbstractGenerateCommand
 {
     /**

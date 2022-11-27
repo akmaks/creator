@@ -2,6 +2,7 @@
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Akimmaksimov85\CreatorBundle\Exceptions\InvalidInputFileFormatException;
 use Akimmaksimov85\CreatorBundle\Exceptions\InvalidInputPropertiesFormatException;
 

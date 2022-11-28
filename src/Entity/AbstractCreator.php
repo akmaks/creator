@@ -127,7 +127,7 @@ abstract class AbstractCreator
         }
 
         if (empty($this->getExtend()) === false) {
-            $class->addExtend($this->getExtend());
+            $class->setExtends($this->getExtend());
             $class->addComment($this->getFileComment());
         }
 

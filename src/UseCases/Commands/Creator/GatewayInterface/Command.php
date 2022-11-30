@@ -17,7 +17,7 @@ class Command extends AbstractCommand
      *
      * @var string
      */
-    public $folder;
+    public string $folder;
 
     /**
      * File name
@@ -27,5 +27,15 @@ class Command extends AbstractCommand
      *
      * @var string
      */
-    public $entity;
+    public string $entity;
+
+    /**
+     * File properties
+     *
+     * @Assert\Type("array")
+     * @Assert\NotBlank()
+     *
+     * @var array
+     */
+    public array $properties;
 }

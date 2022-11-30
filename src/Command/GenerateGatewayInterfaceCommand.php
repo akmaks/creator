@@ -18,11 +18,16 @@ class GenerateGatewayInterfaceCommand extends AbstractGenerateCommand
     protected function configure()
     {
         $this
-            ->setDescription('generator:gatewayInterface --file Client/Client')
+            ->setDescription(
+                'generator:gatewayInterface --file Client/Client --properties id:int/name:string/url:string'
+            )
             ->setDefinition(
-                new InputDefinition([
-                    new InputOption('file', null, InputOption::VALUE_REQUIRED)
-                ])
+                new InputDefinition(
+                    [
+                        new InputOption('file', null, InputOption::VALUE_REQUIRED),
+                        new InputOption('properties', null, InputOption::VALUE_REQUIRED),
+                    ]
+                )
             );
     }
 
@@ -34,11 +39,12 @@ class GenerateGatewayInterfaceCommand extends AbstractGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->parseData($input->getOptions()['file']);
+        $this->parseData($input->getOptions()['file'], $input->getOptions()['properties']);
 
         $command = new Command();
         $command->folder = $this->folderPath;
         $command->entity = $this->fileName;
+        $command->properties = $this->properties;
 
         (new Interactor())($command);
 

@@ -60,6 +60,11 @@ abstract class AbstractCreator
     protected $methods = [];
 
     /**
+     * @var bool
+     */
+    private bool $addProperties = true;
+
+    /**
      * AbstractCodeGenerator constructor.
      *
      * @param string $folderPath
@@ -70,8 +75,7 @@ abstract class AbstractCreator
         string $folderPath,
         string $fileName,
         string $type = self::FILE_TYPE_CLASS
-    )
-    {
+    ) {
         $this->folderPath = $folderPath;
         $this->fileName = $fileName;
         $this->type = ucfirst(mb_strtolower($type));
@@ -135,11 +139,13 @@ abstract class AbstractCreator
             $class->addTrait($trait);
         }
 
-        foreach ($this->getProperties() as $property => $attrs) {
-            $property = $class->addProperty($property);
-            $property->addComment($attrs['comment'] ?? '');
-            $property->setType($attrs['type'] ?? '');
-            $this->setVisibility($property, $attrs['visibility'] ?? '');
+        if ($this->needAddProperties()) {
+            foreach ($this->getProperties() as $property => $attrs) {
+                $property = $class->addProperty($property);
+                $property->addComment($attrs['comment'] ?? '');
+                $property->setType($attrs['type'] ?? '');
+                $this->setVisibility($property, $attrs['visibility'] ?? '');
+            }
         }
 
         foreach ($this->getMethods() as $method => $attrs) {
@@ -156,7 +162,14 @@ abstract class AbstractCreator
             }
 
             foreach (($attrs['parameters'] ?? []) as $parameter => $type) {
-                $method->addParameter($parameter)->setType($type);
+                if ($method->getName() !== '__construct') {
+                    $method->addParameter($parameter)->setType($type);
+                } else {
+                    $method->addPromotedParameter($parameter)
+                           ->setReadOnly()
+                           ->setVisibility('private')
+                           ->setType($type);
+                }
             }
         }
 
@@ -179,6 +192,14 @@ abstract class AbstractCreator
     }
 
     /**
+     * @return void
+     */
+    protected function disableAddProperties(): void
+    {
+        $this->addProperties = false;
+    }
+
+    /**
      * @param string $file
      * @return string
      */
@@ -186,8 +207,8 @@ abstract class AbstractCreator
     {
         $positions = [
             ': \\' => ': ',
-            '(\\' => '(',
-            ', \\' => ', '
+            '(\\'  => '(',
+            ', \\' => ', ',
         ];
 
         foreach ($positions as $search => $replace) {
@@ -200,6 +221,7 @@ abstract class AbstractCreator
     /**
      * @param $object
      * @param $visibility
+     * @return void
      */
     private function setVisibility($object, $visibility)
     {
@@ -222,7 +244,7 @@ abstract class AbstractCreator
     }
 
     /**
-     * @inheritDoc
+     * @return \Nette\PhpGenerator\PhpFile
      */
     protected final function getFile(): PhpFile
     {
@@ -230,7 +252,7 @@ abstract class AbstractCreator
     }
 
     /**
-     * @inheritDoc
+     * @return string
      */
     protected function getFolderPath(): string
     {
@@ -253,7 +275,7 @@ abstract class AbstractCreator
         return [
             self::FILE_TYPE_CLASS,
             self::FILE_TYPE_INTERFACE,
-            self::FILE_TYPE_TRAIT
+            self::FILE_TYPE_TRAIT,
         ];
     }
 
@@ -327,13 +349,13 @@ abstract class AbstractCreator
      * @param bool $recursive
      * @return bool
      */
-    protected function makeDirectory($path, $mode = 0755, $recursive = true)
+    protected function makeDirectory($path, $mode = 0755, $recursive = true): bool
     {
         return mkdir($path, $mode, $recursive);
     }
 
     /**
-     * @inheritDoc
+     * @return string
      */
     protected function getNamespacePath(): string
     {
@@ -373,7 +395,7 @@ abstract class AbstractCreator
                 'boolean',
                 'float',
                 'array',
-                'callable'
+                'callable',
             ]
         );
     }
@@ -386,11 +408,36 @@ abstract class AbstractCreator
      */
     protected function transformCamelCaseToSnakeCase(string $str)
     {
-        $str = implode('_', array_map(function ($namePart) {
-            return mb_strtolower($namePart);
-        }, preg_split('/(?=[A-Z])/', $str)));
+        return implode(
+            '_',
+            array_map(function ($namePart) {
+                return mb_strtolower($namePart);
+            }, preg_split('/(?=[A-Z])/', $str))
+        );
+    }
 
-        return $str;
+    /**
+     * @return CodeBuilder
+     */
+    protected function getCodeBuilder(): CodeBuilder
+    {
+        return new CodeBuilder();
+    }
+
+    /**
+     * @return bool
+     */
+    private function needAddProperties(): bool
+    {
+        if ($this->type === self::FILE_TYPE_INTERFACE) {
+            return false;
+        }
+
+        if (!$this->addProperties) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

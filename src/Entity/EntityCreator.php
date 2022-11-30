@@ -38,8 +38,6 @@ class EntityCreator extends AbstractCreator
         }
 
         parent::__construct($folderPath, $fileName);
-
-        $this->uses[] = 'App\\Entities\\AbstractDTO';
     }
 
     /**
@@ -47,7 +45,6 @@ class EntityCreator extends AbstractCreator
      */
     protected function initImplements(): void
     {
-        $this->implements[] = 'App\\Entities\\Entity';
     }
 
     /**
@@ -77,11 +74,6 @@ class EntityCreator extends AbstractCreator
 
             $methods = array_merge($methods, $this->makeSetter($property, $type));
         }
-
-        $methods = array_merge(
-            $methods,
-            $this->makeToDTO($this->getFileName())
-        );
 
         $this->methods = $methods;
     }

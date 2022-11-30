@@ -18,7 +18,7 @@ class Interactor extends AbstractInteractor
      */
     public function __invoke(Command $command) : void
     {
-        $creator = new GatewayInterfaceCreator($command->folder, $command->entity);
+        $creator = new GatewayInterfaceCreator($command->folder, $command->entity, $command->properties);
         $creator->run();
     }
 

@@ -11,17 +11,17 @@ abstract class AbstractGenerateCommand extends \Symfony\Component\Console\Comman
     /**
      * @var string
      */
-    protected $folderPath;
+    protected string $folderPath;
 
     /**
      * @var string
      */
-    protected $fileName;
+    protected string $fileName;
 
     /**
      * @var array
      */
-    protected $properties;
+    protected array $properties;
 
     /**
      * @param string|null $fileData

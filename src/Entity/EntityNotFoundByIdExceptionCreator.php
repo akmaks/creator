@@ -44,7 +44,6 @@ class EntityNotFoundByIdExceptionCreator extends AbstractCreator
      */
     protected function initUses(): void
     {
-        $this->uses[] = 'Symfony\\Component\\HttpFoundation\\Response';
     }
 
     /**
@@ -90,8 +89,7 @@ class EntityNotFoundByIdExceptionCreator extends AbstractCreator
                         "    sprintf(\n",
                         "        '" . $this->entityName . " not found by id = %s',\n",
                         "        \$" . $idName . "\n",
-                        "    ),\n",
-                        "    Response::HTTP_NOT_FOUND\n",
+                        "    )\n",
                         ");\n",
                     ]
                 ),

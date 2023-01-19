@@ -15,7 +15,9 @@ class InvalidInputPropertiesFormatException extends \DomainException
      */
     public function __construct()
     {
-        parent::__construct('Invalid input properties format. Valid format: {propertyName}:{propertyType}/{propertyName}:{propertyType}');
+        parent::__construct(
+            'Invalid input properties format. Valid format: {propertyName}:{propertyType}/{propertyName}:{propertyType}'
+        );
     }
 
 }

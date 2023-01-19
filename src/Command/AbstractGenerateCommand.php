@@ -1,12 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Akimmaksimov85\CreatorBundle\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
+use Akimmaksimov85\CreatorBundle\Builders\ContentBuilder\ContentBuilder;
+use Akimmaksimov85\CreatorBundle\Builders\PhpFileBuilder\PhpFileBuilder;
+use Akimmaksimov85\CreatorBundle\Entity\Meta;
 use Akimmaksimov85\CreatorBundle\Exceptions\InvalidInputFileFormatException;
 use Akimmaksimov85\CreatorBundle\Exceptions\InvalidInputPropertiesFormatException;
+use Akimmaksimov85\CreatorBundle\Providers\AbstractDataProvider;
+use Akimmaksimov85\CreatorBundle\UseCases\Commands\Create\Interactor;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
-abstract class AbstractGenerateCommand extends \Symfony\Component\Console\Command\Command
+abstract class AbstractGenerateCommand extends Command
 {
     /**
      * @var string
@@ -23,13 +31,49 @@ abstract class AbstractGenerateCommand extends \Symfony\Component\Console\Comman
      */
     protected array $properties;
 
+    public function __construct(
+        protected readonly PhpFileBuilder $phpFileBuilder,
+        protected readonly ContentBuilder $contentBuilder,
+        string    $name = null
+    ) {
+        parent::__construct($name);
+    }
+
+    /**
+     * @param \Akimmaksimov85\CreatorBundle\Providers\AbstractDataProvider $dataProvider
+     * @param array $properties
+     * @return int
+     */
+    public function runInteractor(AbstractDataProvider $dataProvider, array $properties): int
+    {
+        $interactor = new Interactor($this->phpFileBuilder, $dataProvider);
+
+        $command = new \Akimmaksimov85\CreatorBundle\UseCases\Commands\Create\Command();
+        $command->properties = $properties;
+
+        $interactor($command);
+
+        return 0;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return Meta
+     */
+    protected function getMeta(InputInterface $input): Meta
+    {
+        $this->parseData($input->getOptions()['file'], $input->getOptions()['properties']);
+
+        return new Meta($this->fileName, $this->folderPath, $this->fileName);
+    }
+
     /**
      * @param string|null $fileData
      * @param string|null $propertiesData
      *
      * @return void
      */
-    protected function parseData(string $fileData = null, string $propertiesData = null): void
+    private function parseData(string $fileData = null, string $propertiesData = null): void
     {
         if (empty($fileData) === true) {
             throw new InvalidInputFileFormatException();

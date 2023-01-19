@@ -1,4 +1,11 @@
 services:
-  Akimmaksimov85\CreatorBundle\Command\:
-    resource: '../../Command/*'
-    tags: ['console.command']
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Akimmaksimov85\CreatorBundle\Command\:
+        resource: '../../Command/*'
+        tags: [ 'console.command' ]
+
+    Akimmaksimov85\CreatorBundle\Builders\PhpFileBuilder\PhpFileBuilder: ~
+    Akimmaksimov85\CreatorBundle\Builders\ContentBuilder\ContentBuilder: ~

@@ -7,7 +7,7 @@
         "nette/php-generator": "*",
         "symfony/console": "6.1.*",
         "symfony/framework-bundle": "6.1.*",
-        "symfony/messenger": "6.1.*",
+        "symfony/messenger": "6/.1.*",
         "symfony/validator": "6.1.*",
         "ramsey/uuid-doctrine": "^1.6",
         "doctrine/annotations": "^1.11",

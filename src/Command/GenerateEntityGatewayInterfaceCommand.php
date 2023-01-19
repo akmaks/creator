@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Akimmaksimov85\CreatorBundle\Command;
 
-use Akimmaksimov85\CreatorBundle\Providers\EntityDataProvider;
+use Akimmaksimov85\CreatorBundle\Providers\EntityGatewayInterfaceProvider;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'generator:entity')]
-class GenerateEntityCommand extends AbstractGenerateCommand
+#[AsCommand(name: 'generator:entityGatewayInterface')]
+class GenerateEntityGatewayInterfaceCommand extends AbstractGenerateCommand
 {
-    protected static $defaultName = 'generator:entity';
+    protected static $defaultName = 'generator:entityGatewayInterface';
 
     protected function configure()
     {
         $this
             ->setDescription(
-                'generator:entity --file Entities/Client/Client --properties id:int/name:string/url:string'
+                'generator:entityGatewayInterface --file Entities/Client/Client --properties id:int/name:string/url:string'
             )
             ->setDefinition(
                 new InputDefinition(
@@ -40,7 +40,7 @@ class GenerateEntityCommand extends AbstractGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dataProvider = new EntityDataProvider($this->getMeta($input), $this->contentBuilder);
+        $dataProvider = new EntityGatewayInterfaceProvider($this->getMeta($input), $this->contentBuilder);
 
         return $this->runInteractor($dataProvider, $this->properties);
     }

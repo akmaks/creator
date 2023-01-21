@@ -40,7 +40,7 @@ class GenerateEntityCommand extends AbstractGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dataProvider = new EntityDataProvider($this->getMeta($input), $this->contentBuilder);
+        $dataProvider = $this->getDataProviderFactory($input)->get(EntityDataProvider::class);
 
         return $this->runInteractor($dataProvider, $this->properties);
     }

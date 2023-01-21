@@ -19,9 +19,9 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
      */
     public function getFilledGenerator(array $properties): Meta
     {
-        return $this->meta
+        return $this->getMeta()
             ->setType($this->getFileType())
-            ->setFileName($this->meta->getFileName() . self::FILE_NAME_POSTFIX)
+            ->setFileName($this->getMeta()->getFileName() . self::FILE_NAME_POSTFIX)
             ->setUses($this->getUses())
             ->setImplements($this->getImplements())
             ->setMethods($this->getMethods($properties));
@@ -43,7 +43,7 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
     private function getImplements(): array
     {
         return [
-            $this->meta->getNamespacePath() . '\\' . $this->meta->getEntityName(
+            $this->getMeta()->getNamespacePath() . '\\' . $this->getMeta()->getEntityName(
             ) . EntityGatewayInterfaceProvider::FILE_NAME_POSTFIX,
         ];
     }
@@ -70,7 +70,7 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
     {
         return (new Method())
             ->setName('__construct')
-            ->setComment($this->meta->getFileName() . ' constructor')
+            ->setComment($this->getMeta()->getFileName() . ' constructor')
             ->setVisibility(Visibility::VISIBILITY_PUBLIC->value)
             ->setProperties(['em' => 'Doctrine\\ORM\\EntityManagerInterface']);
     }
@@ -84,50 +84,50 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
         return (new Method())
             ->setName('getById')
             ->setComment(
-                $this->contentBuilder
+                $this->getContentBuilder()
                     ->setString(
-                        sprintf('Find %s by ID', $this->meta->getEntityName()),
+                        sprintf('Find %s by ID', $this->getMeta()->getEntityName()),
                         "\n\n"
                     )
                     ->setString(
                         sprintf(
                             '@param %s $id %s ID',
                             $properties['id'],
-                            $this->meta->getEntityName()
+                            $this->getMeta()->getEntityName()
                         ),
                         "\n\n"
                     )
-                    ->setString(sprintf('@return null|%s', $this->meta->getEntityName()))
+                    ->setString(sprintf('@return null|%s', $this->getMeta()->getEntityName()))
                     ->run()
             )
             ->setProperties(['id' => $properties['id']])
             ->setVisibility(Visibility::VISIBILITY_PUBLIC->value)
             ->setBody(
-                $this->contentBuilder
+                $this->getContentBuilder()
                     ->setString(
                         sprintf(
                             '$repository = $this->em->getRepository(%s::class);',
-                            $this->meta->getEntityName()
+                            $this->getMeta()->getEntityName()
                         )
                     )
                     ->setString(
                         sprintf(
                             '$%s = $repository->findOneBy([\'id\' => $id]);',
-                            $this->meta->getEntityVarName()
+                            $this->getMeta()->getEntityVarName()
                         ),
                         "\n\n"
                     )
                     ->setString(
                         sprintf(
                             'if ($%s instanceof %s) {',
-                            $this->meta->getEntityVarName(),
-                            $this->meta->getEntityName()
+                            $this->getMeta()->getEntityVarName(),
+                            $this->getMeta()->getEntityName()
                         )
                     )
                     ->setString(
                         sprintf(
                             '    return $%s;',
-                            $this->meta->getEntityVarName()
+                            $this->getMeta()->getEntityVarName()
                         )
                     )
                     ->setString('}', "\n\n")
@@ -135,7 +135,7 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
                     ->run()
             )
             ->setReturn(
-                '?' . $this->meta->getEntityWithNamespace()
+                '?' . $this->getMeta()->getEntityWithNamespace()
             );
     }
 
@@ -148,21 +148,21 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
         return (new Method())
             ->setName($name)
             ->setComment(
-                $this->contentBuilder
+                $this->getContentBuilder()
                     ->setString(
                         sprintf(
                             '%s new %s',
                             ucfirst($name),
-                            $this->meta->getEntityName()
+                            $this->getMeta()->getEntityName()
                         ),
                         "\n\n"
                     )
                     ->setString(
                         sprintf(
                             '@param %s $%s %s',
-                            $this->meta->getEntityName(),
-                            $this->meta->getEntityVarName(),
-                            $this->meta->getEntityName()
+                            $this->getMeta()->getEntityName(),
+                            $this->getMeta()->getEntityVarName(),
+                            $this->getMeta()->getEntityName()
                         ),
                         "\n\n"
                     )
@@ -171,17 +171,17 @@ class EntityDoctrineGatewayProvider extends AbstractDataProvider
             )
             ->setProperties(
                 [
-                    $this->meta->getEntityVarName() => $this->meta->getEntityName(),
+                    $this->getMeta()->getEntityVarName() => $this->getMeta()->getEntityName(),
                 ]
             )
             ->setVisibility(Visibility::VISIBILITY_PUBLIC->value)
             ->setBody(
-                $this->contentBuilder
+                $this->getContentBuilder()
                     ->setString(
                         sprintf(
                             '$this->em->%s($%s);',
                             $name === 'delete' ? 'remove' : 'persist',
-                            $this->meta->getEntityVarName()
+                            $this->getMeta()->getEntityVarName()
                         )
                     )
                     ->setString('$this->em->flush();')

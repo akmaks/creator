@@ -278,7 +278,7 @@ class Meta
      */
     public function setUses(array $uses): static
     {
-        $this->uses = $uses;
+        $this->uses = array_unique($uses);
 
         return $this;
     }
@@ -316,7 +316,7 @@ class Meta
      */
     public function setTraits(array $traits): static
     {
-        $this->traits = $traits;
+        $this->traits = array_unique($traits);
 
         return $this;
     }

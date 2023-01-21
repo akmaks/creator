@@ -40,7 +40,7 @@ class GenerateEntityDoctrineRepositoryCommand extends AbstractGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dataProvider = new EntityDoctrineRepositoryProvider($this->getMeta($input), $this->contentBuilder);
+        $dataProvider = $this->getDataProviderFactory($input)->get(EntityDoctrineRepositoryProvider::class);
 
         return $this->runInteractor($dataProvider, $this->properties);
     }

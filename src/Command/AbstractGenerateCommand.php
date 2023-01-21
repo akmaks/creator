@@ -9,7 +9,9 @@ use Akimmaksimov85\CreatorBundle\Builders\PhpFileBuilder\PhpFileBuilder;
 use Akimmaksimov85\CreatorBundle\Entity\Meta;
 use Akimmaksimov85\CreatorBundle\Exceptions\InvalidInputFileFormatException;
 use Akimmaksimov85\CreatorBundle\Exceptions\InvalidInputPropertiesFormatException;
+use Akimmaksimov85\CreatorBundle\Helpers\StringConverter;
 use Akimmaksimov85\CreatorBundle\Providers\AbstractDataProvider;
+use Akimmaksimov85\CreatorBundle\Providers\DataProviderFactory;
 use Akimmaksimov85\CreatorBundle\UseCases\Commands\Create\Interactor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,6 +36,7 @@ abstract class AbstractGenerateCommand extends Command
     public function __construct(
         protected readonly PhpFileBuilder $phpFileBuilder,
         protected readonly ContentBuilder $contentBuilder,
+        protected readonly StringConverter $stringConverter,
         string    $name = null
     ) {
         parent::__construct($name);
@@ -101,5 +104,18 @@ abstract class AbstractGenerateCommand extends Command
                 throw new InvalidInputPropertiesFormatException();
             }
         }
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return DataProviderFactory
+     */
+    protected function getDataProviderFactory(InputInterface $input): DataProviderFactory
+    {
+        return new DataProviderFactory(
+            $this->getMeta($input),
+            $this->contentBuilder,
+            $this->stringConverter
+        );
     }
 }

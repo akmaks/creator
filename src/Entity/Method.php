@@ -91,4 +91,11 @@ class Method
 
         return $this;
     }
+
+    public function setStaticReturn(): static
+    {
+        $this->return = 'static';
+
+        return $this;
+    }
 }

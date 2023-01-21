@@ -40,7 +40,7 @@ class GenerateEntityGatewayInterfaceCommand extends AbstractGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dataProvider = new EntityGatewayInterfaceProvider($this->getMeta($input), $this->contentBuilder);
+        $dataProvider = $this->getDataProviderFactory($input)->get(EntityGatewayInterfaceProvider::class);
 
         return $this->runInteractor($dataProvider, $this->properties);
     }

@@ -17,9 +17,9 @@ class EntityDoctrineRepositoryProvider extends AbstractDataProvider
      */
     public function getFilledGenerator(array $properties): Meta
     {
-        return $this->meta
+        return $this->getMeta()
             ->setType($this->getFileType())
-            ->setFileName($this->meta->getFileName() . self::FILE_NAME_POSTFIX)
+            ->setFileName($this->getMeta()->getFileName() . self::FILE_NAME_POSTFIX)
             ->setFileComment($this->getFileComment())
             ->setUses($this->getUses())
             ->setExtends('Doctrine\\ORM\\EntityRepository');
@@ -40,30 +40,30 @@ class EntityDoctrineRepositoryProvider extends AbstractDataProvider
      */
     private function getFileComment(): string
     {
-        return $this->contentBuilder
-            ->setString($this->meta->getFileName(), "\n\n")
+        return $this->getContentBuilder()
+            ->setString($this->getMeta()->getFileName(), "\n\n")
             ->setString(
                 sprintf(
                     '@method %s|null find($id, $lockMode = null, $lockVersion = null)',
-                    $this->meta->getEntityName()
+                    $this->getMeta()->getEntityName()
                 )
             )
             ->setString(
                 sprintf(
                     '@method %s[]    findAll()',
-                    $this->meta->getEntityName()
+                    $this->getMeta()->getEntityName()
                 )
             )
             ->setString(
                 sprintf(
                     '@method %s[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)',
-                    $this->meta->getEntityName()
+                    $this->getMeta()->getEntityName()
                 )
             )
             ->setString(
                 sprintf(
                     '@method %s|null findOneBy(array $criteria, array $orderBy = null)',
-                    $this->meta->getEntityName()
+                    $this->getMeta()->getEntityName()
                 )
             )
             ->run();
